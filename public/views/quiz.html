@@ -1,0 +1,59 @@
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-hover table-striped text-right">
+			<thead>
+				<tr>
+					<th class="text-right">
+						#
+					</th>
+					<th class="text-right">
+						סוג שאלה
+					</th>
+					<th class="text-right">
+						תקציר
+					</th>
+					<th class="text-right">
+						פעולה
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="question in questions track by $index">
+					<td>
+						{{$index+1}}
+					</td>
+					<td>
+						{{question.qtype}}
+					</td>
+					<td>
+						<span mathjax-bind="shortBody[$index]"></span>
+					</td>
+					<td>
+						<a href="#/quiz/question/{{question._id}}/{{question.qtype}}" class="btn btn-default">
+							פתור
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+
+
+{{solved}}
+<!--{{size}}v
+
+<hr>
+
+
+<hr>
+<div ng-repeat="question in questions track by $index">
+	{{$index+1}} 
+	{{question.qtype}}
+	{{shortBody[$index]}}
+	<a href="v">Solve.</a>
+</div>
+
+-->

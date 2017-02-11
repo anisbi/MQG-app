@@ -1,0 +1,153 @@
+<div class="home-container">
+	<div class="row">
+		<div class="col-md-3 col-xs-6">
+			<div class="home-button-container">
+				<button class="btn btn-sq-lg btn-primary center-block custom-home-button" ng-click="createQstnrForm()">
+					<span class="glyphicon glyphicon-plus" id="home-button-glyph"></span>
+					<h3 class="center-block" id="home-button-text">
+					שאלון חדש
+					</h3>
+					
+				</button>
+			</div>
+		</div>
+
+		<div class="col-md-3 col-xs-6">
+			<div class="home-button-container">
+				<button class="btn btn-sq-lg btn-primary center-block custom-home-button" ng-click="listQstnrs()">
+				<span class="glyphicon glyphicon-align-justify" id="home-button-glyph"></span>
+				<h3 class="center-block" id="home-button-text">
+					רשימת כל השאלונים
+				</h3>
+			</div>
+		</div>
+
+		<div class="col-md-3 col-xs-6">
+			<a href="#" class="btn btn-sq-lg btn-primary center-block">
+				<span class="glyphicon glyphicon-user" id="home-button-glyph"></span>
+				<h3 class="center-block" id="home-button-text">
+					ניהול משתמשים
+				</h3>
+			</a>
+		</div>
+
+		<div class="col-md-3 col-xs-6">
+			<a href="#" class="btn btn-sq-lg btn-primary center-block">
+				<span class="glyphicon glyphicon-signal center-block" id="home-button-glyph"></span>
+				<h3 class="center-block" id="home-button-text">
+					סטטיסטיקה
+				</h3>
+			</a>
+		</div>
+
+
+	</div>
+
+
+	<!--Create new questionnaire form-->
+	<div class="row" ng-show="formView">
+		<div class="col-md-12">
+			<form ng-submit="newQstnr()">
+				<div class="form-group">
+					<label for="questionnaire-name-home">
+						אנא הזן שם לשאלון
+					</label>
+					<input type="text" ng-model="title" class="form-control" aria-describedby="whyName" id="questionnaire-name-home" placeholder="שם השאלון" required>
+					<small id="whyName" class="form-text text-muted">
+						שם השאלון נועד לעזור לך להבדיל בין שאלונים
+					</small>
+				</div>
+				<button type="submit" class="btn btn-primary">צור שאלון חדש</button>
+			</form>
+		</div>
+	</div>
+
+	<!--List of all questionnaires-->
+	<div class="row" ng-show="qstnrsView">
+		<div class="col-md-12">
+			<table class="table table-hover text-right">
+				<thead>
+					<th class="text-right">
+						שם השאלון
+					</th>
+					<th class="text-right">
+						נכתב ע״י
+					</th>
+					<th class="text-right">
+						תאריך יצירה
+					</th>
+					<th class="text-right">
+						פעולה
+					</th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="qstnr in filteredQstnrs">
+						<td>
+							{{qstnr.title}}
+						</td>
+						<td>
+							{{qstnr.author}}
+						</td>
+						<td>
+							--/--/--
+						</td>
+						<td>
+							<!--button class="btn btn-primary"-->
+							<a href="#/questionnaires/{{qstnr._id}}" class="btn btn-primary">	
+								עריכה
+							</a>
+							<!--/button-->
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<pagination 
+		      ng-model="currentPage"
+		      total-items="qstnrs.length"
+		      max-size="maxSize" 
+		      items-per-page="numPerPage"
+		      num-pages="numPages"
+		      boundary-links="true">
+	    	</pagination>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<form ng-submit="newQstnr()">
+	<input required type="text" ng-model="title">
+	<button type="submit">New Questionnaire</button>
+</form>
+
+<div ng-repeat="qstnr in qstnrs">
+	{{qstnr.title}} by {{qstnr.author}}<br>
+	<span>
+		<a href="#/questionnaires/{{qstnr._id}}">View questions</a>
+	</span>
+</div>
+-->

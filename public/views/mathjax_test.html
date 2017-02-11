@@ -1,0 +1,22 @@
+
+<!--
+hello welcome {{welcome}}
+
+When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
+$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+-->
+
+<form id="form">
+  <label for="eq">Enter an equation:</label>
+  <input type="text" id="eq" ng-model="equation" />
+  <input type="submit" value="draw" ng-click="draw()" />
+</form>
+
+
+<div id="plot" style="width: 250; height:250;"></div>
+
+<p>
+  Plot library: <a href="https://github.com/maurizzzio/function-plot">https://github.com/maurizzzio/function-plot</a>
+</p>
+
+{{eval}}

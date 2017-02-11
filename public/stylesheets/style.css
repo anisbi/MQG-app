@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css?family=Arimo');
+body {
+  font-family: 'Arimo', sans-serif;
+  font: 14px;
+  background-color: #27778E;
+  color: #FFFFFF;
+}
+
+
+
+a {
+  color: #000000;
+}
+
+a:visited {
+	color: #FFFFFF !important;
+}
+
+a:hover {
+	text-decoration: none;
+	color: #3495B1 !important;
+}
+
+label {
+	font-weight: normal !important;
+	font-size: 17px;
+}
+
+small {
+	font-size: 13px;
+}
+
+.text-muted {
+	color: #4ABCDC;
+}
+
+.container-fluid {
+	padding: 0px;
+	direction: rtl;
+}
+
+.navbar-default {
+	background-color: #4ABCDC;
+	border: 0px;
+	border-radius: 0px;
+	padding-bottom: 11px;
+}
+
+.navbar-default .navbar-brand {
+	color: #FFFFFF;
+	font-size: 23px;
+}
+
+
+
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+     color: #00A7E8;
+}
+
+#navglyph {
+	font-size: 37px;
+}
+
+.home-container, .edit-qstnr-container, .edit-multi-container {
+	margin: 15px;
+}
+
+.btn-primary, btn-primary:visited {
+	background-color: #4ABCDC !important;
+	border: 0px;
+	border-radius: 3px;
+}
+
+.btn-primary:hover {
+	background-color: #37CA63 !important;
+	color: #FFFFFF !important;
+}
+
+#home-button-glyph {
+	padding-top: 37px;
+	font-size: 67px;
+}
+
+.home-button-container {
+	padding-bottom: 23px;
+}
+
+//span.glyphicon {
+//	
+//}
+
+#home-button-glyph {
+	font-size: 67px;;	
+}
+
+.btn-sq-lg {
+  width: 230px;
+  height: 230px;
+  border-radius: 0px;
+}
+
+.btn-sq-md {
+  width: 100px;
+  height: 100px;
+  border-radius: 0px;
+}
+
+#new-question-glyph {
+	font-size: 48px;
+}
+
+.form-group {
+	margin-bottom: 3px;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #1E596A;
+}
+
+.pagination>li>a, .pagination>li>span {
+	background-color: #4ABCDC;
+	border: 0px;
+}
+
+.pagination>.disabled>span, .pagination>.disabled>span:hover,
+.pagination>.disabled>span:focus,.pagination>.disabled>a,
+.pagination>.disabled>a:hover, .pagination>.disabled>a:focus {
+	background-color: #4ABCDC;
+	border: 0px;
+}
+
+.pagination>.active>a:hover, .pagination>.active>span:hover {
+  background-color: #1E596A;
+  color: #FFFFFF !important;
+}
+
+.pagination>.active>a, .pagination>.active>span {
+  background-color: #1E596A;
+}
+
+.pagination>li>a:hover, .pagination>li>span:hover {
+  background-color: #1E596A;
+  color: #FFFFFF !important;
+}
+
+.qstnr-info-table {
+	border-top: 0px !important;
+	background-color: #4ABCDC;
+}
+
+
+#new-question-btn {
+	margin-bottom: 9px;
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
+	background-color: #4ABCDC;
+}
+
+.table-striped>tbody>tr:nth-child(even)>td, 
+.table-striped>tbody>tr:nth-child(even)>th {
+	background-color: #3495B1;
+}
+
+.table-striped>tbody>tr:hover:nth-child(even)>td, 
+.table-striped>tbody>tr:hover:nth-child(even)>th {
+	background-color: #1E596A;
+}
+
+.table-striped>tbody>tr:hover:nth-child(even)>td, 
+.table-striped>tbody>tr:hover:nth-child(even)>th {
+	background-color: #1E596A;
+}
+
+.btn-default {
+	background-color: #445CBD;
+	border: 0px;
+	border-radius: 0px;
+}
+
+textarea, input {
+	margin: 1px;
+	background-color: #1E596A;
+	border: 1px solid #1E596A;
+}
+
+
+
+input[type=text] {
+	border: 0px solid gray;
+}
+
+input[type=text]:focus, textarea:focus {
+	outline: none !important;
+	border-color: #4ABCDC;
+	box-shadow: 0 0 10px #9ecaed;
+	//background-color: #4ABCDC;
+	border: 0px solid #188F3C;
+}
+
+#question-body, #edit-multi-text, #edit-multi-options-equation {
+	width: 100%;
+}
+#edit-multi-text, #edit-equation {
+	margin-bottom: 5px;
+}
+
+#edit-equation, #edit-multi-options-equation {
+	direction: ltr;
+}
+.btn-xs, .btn-group-xs>.btn,
+.btn-md, .btn-group-md>.btn {
+	border-radius: 0px;
+}
+#delete-multi-option-btn {
+	padding: 4px 5px;
+}
+#multi-new-option-glyph, #multi-save-question-glyph {
+	font-size: 23px;
+}
+
+.text-warning {
+	color: #FBAF61;
+}
+
+.multi-preview-container {
+	border-radius: 1px;
+	border: 1px dotted gray;
+	padding: 15px;
+	background-color: #4ABCDC;
+}
+
+.function-plot {
+	direction: ltr !important;
+}

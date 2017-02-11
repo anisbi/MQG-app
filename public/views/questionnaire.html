@@ -1,0 +1,190 @@
+<!--
+<div class="edit-qstnr-container">
+	<div class="row">
+		<div class="col-md-3">
+			<h3>שם השאלון</h3>
+		</div>
+		<div class="col-md-3">
+			<h4>נוצר ע״י</h4>
+		</div>
+		<div class="col-md-3">
+			<h4>נוצר בתאריך</h4>
+		</div>
+		<div class="col-md-3">
+			<h2><button class="btn btn-sq-lg btn-primary"></h2>
+		</div>
+	</div>
+</div>
+-->
+
+<div class="edit-qstnr-container">
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-hover text-right pull-right">
+				<tbody>
+					<tr>
+						<td class="text-right qstnr-info-table">
+							<strong>שם השאלון:</strong>
+						{{qstnr.title}}
+					</td>
+					</tr>
+					<tr>
+						<td class="text-right qstnr-info-table">
+							<strong>נוצר ע״י:</strong>
+						{{qstnr.author}}
+					</td>
+					</tr>
+					<tr>
+						<td class="text-right qstnr-info-table">
+							<strong>נוצר בתאריך:</strong>
+						--/--/--
+					</td>
+					</tr>
+				
+				</tbody>
+			</table>
+		</div>
+
+
+	</div>
+	<div class="row">
+		<div class="col-md-3 pull-right">
+			<button class="btn btn-primary btn-sq-md" id="new-question-btn" ng-click="pickQt()">
+				<span class="glyphicon glyphicon-plus" id="new-question-glyph"></span>
+				<h5 class="center-block">
+					הוסף שאלה
+				</h5>
+			</button>
+		</div>
+	</div>
+	<div class="row" ng-show="pickType">
+		<div class="col-md-12 pull-right">
+			<h5>
+				בחר סוג שאלה
+			</53>
+		</div>
+	</div>
+	<div class="row" ng-show="pickType">
+		<div class="col-md-12 pull-right">
+			<a href="#/questionnaires/{{qstnr._id}}/new/multi_choice" class="btn btn-primary btn-sq-md" id="new-question-btn">
+				<span class="glyphicon glyphicon-list" id="new-question-glyph"></span>
+				<h5 class="center-block">
+					ריבוי תשובות
+				</h5>
+			</a>
+
+			<button class="btn btn-primary btn-sq-md" id="new-question-btn">
+				<span class="glyphicon glyphicon-magnet" id="new-question-glyph"></span>
+				<h5 class="center-block">
+					סוג 2
+				</h5>
+			</button>
+
+			<button class="btn btn-primary btn-sq-md" id="new-question-btn">
+				<span class="glyphicon glyphicon-bullhorn" id="new-question-glyph"></span>
+				<h5 class="center-block">
+					סוג 3
+				</h5>
+			</button>
+
+			<button class="btn btn-primary btn-sq-md" id="new-question-btn">
+				<span class="glyphicon glyphicon-fullscreen" id="new-question-glyph"></span>
+				<h5 class="center-block">
+					סוג 4
+				</h5>
+			</button>
+
+
+			<button class="btn btn-primary btn-sq-md" id="new-question-btn">
+				<span class="glyphicon glyphicon-random" id="new-question-glyph"></span>
+				<h5 class="center-block">
+					סוג 5
+				</h5>
+			</button>
+
+
+
+		</div>
+
+		
+
+
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-hover table-striped table-bordered text-right">
+				<thead>
+					<tr>
+						<th class="text-right">
+							#
+						</th>
+						<th class="text-right">
+							סוג שאלה
+						</th>
+						<th class="text-right">
+							תקציר
+						</th>
+						<th class="text-right">
+							נכתב ע״י
+						</th>
+						<th class="text-right">
+							פעולה
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="question in qstnr.questions track by $index">
+						<td>
+							{{$index}}
+						</td>
+						<td>
+							{{question.qtype}}
+						</td>
+						<td>
+							{{question.body}}
+						</td>
+						<td>
+							----
+						</td>
+						<td>
+							<a href="#/questions/{{question._id}}/edit/{{question.qtype}}" class="btn btn-default">
+								עריכה
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<!--
+<div ng-repeat="question in qstnr.questions track by $index">
+	<b>Author:</b> {{question._id}}<br>
+	<b>Type:</b> {{question.qtype}}<br>
+	<b>Options</b>
+	<ul ng-repeat="option in question.options">
+
+		<li mathjax-bind="option.body" />
+	</ul>
+	<a href="#/questions/{{question._id}}/edit/{{question.qtype}}">Edit</a>
+	<button class="md-primary md-raised" ng-click="delQuestion($index)" >
+      Delete
+    </button>
+
+	<!{question | json}}
+
+</div>
+
+<a href="#/questionnaires/{{qstnr._id}}/new">ADD</a>
+-->
+
+
+<!--
+<form ng-submit="newQuestion()">
+	<input required type="text" ng-model="type" id="qtype">
+	<button type="submit">[+] Question</button>
+</form>
+-->

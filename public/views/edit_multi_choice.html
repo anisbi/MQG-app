@@ -1,0 +1,141 @@
+<div class="edit-multi-container">
+ <div class="row">
+  <div class="col-md-12">
+   <form>
+    <div class="form-group">
+  	  <div for="question-body">
+  	  	<h3>גוף השאלה</h3>
+  	  </div>
+ 	  <textarea rows="5" id="question-body" ng-model="question.body" placeholder="הזן כאן גוף השאלה"></textarea>
+ 	  <h4>שרטוט פונקציה לגוף השאלה</h4>
+ 	  <input type="text" ng-model="qbodyequation" placeholder="דוגמא: x^2+5" id="edit-equation">
+ 	  <div for="question-options">
+ 	  	<h3>תשובות לבחירה</h3>
+ 	  </div>
+ 	  <div class="row">
+ 	  	<div class="col-xs-4 col-md-4 pull-right hidden-xs hidden-small">
+ 	  		<h4>גוף התשובה</h4>
+ 	  	</div>
+ 	  	<div class="col-xs-3 col-md-3 pull-right hidden-xs">
+ 	  		<h4>הערב לתשובה זו</h4>
+ 	  	</div>
+ 	  	<div class="col-xs-3 col-md-3 pull-right hidden-xs">
+ 	  		<h4>הערב לתשובה זו</h4>
+ 	  	</div>
+ 	  	<div class="col-xs-1 col-md-1 pull-right hidden-xs">
+ 	  		<h6>תשובה נכונה</h6>
+ 	  	</div>
+ 	  	<div class="col-xs-1 col-md-1 pull-right hidden-xs">
+ 	  		<h4>מחק</h4>
+ 	  	</div>
+ 	  </div>
+
+ 	  <div class="row" ng-repeat="option in question.options track by $index" for="{{option}}">
+
+ 	  	<div class="col-xs-4 col-md-4 pull-right">
+ 	  		<input type="text" ng-model="option.body" placeholder="option" id="edit-multi-text">
+ 	  	</div>
+ 	  	<div class="col-xs-3 col-md-3 pull-right">
+ 	  		<input type="text" ng-model="option.comment" placeholder="comment" id="edit-multi-text">
+ 	  	</div>
+ 	  	<div class="col-xs-3 col-md-3 pull-right">
+ 	  		<input type="text" ng-model="qoptionsequation[$index]" placeholder="comment" id="edit-multi-options-equation">
+ 	  	</div>
+ 	  	<div class="col-xs-1 col-md-1 pull-right">
+ 	  	 <input type="radio" name="answer" ng-checked="isAnswer($index)" ng-click="setAnswer($index)" ng-model="answer">
+ 	  	 
+		</div>
+		<div class="col-xs-1 col-md-1 pull-right">
+ 	  	 <button class="btn btn-danger btn-xs" ng-click="deleteOption($index)" id="delete-multi-option-btn"><span class="glyphicon glyphicon-trash"></span></button>
+		</div>
+ 	  </div>
+    </div>
+   </form>
+  </div>
+ </div>
+ <button class="btn btn-md btn-primary" ng-click="addOption()">
+  <span class="glyphicon glyphicon-plus" id="multi-new-option-glyph"></span>
+  <h5 class="center-block" >הוסף תשובה</h5>
+ </button>
+ <button class="btn btn-md btn-primary" ng-click="commitQuestion()">
+ 	<span class="glyphicon glyphicon-floppy-save" id="multi-save-question-glyph"></span>
+ 	<h5 class="center-block">שמור שאלה</h5>
+ </button>
+ <div class="row">
+ 	<div class="col-md-12 col-xs-12">
+ 		<small class="text-warning"><strong>אזהרה!</strong> לחץ על כפתור שמור שאלה על מנת לשמור שינויים. יציאה ללא שמירה תגרום לאיבוד השינויים שנוצרו.</small>
+	</div>
+ </div>
+
+ <div class="row">
+ 	<div class="col-md-12 col-xs-12">
+		<h3>תצוגה מקדימה</h3>
+		<p>
+			תצוגה מקדימה של השאלה. האופן שתוצג בו השאלה לפותר.
+		</p>
+ 	</div>
+ </div>
+ <div class="row">
+ 	<div class="col-md-12 col-xs-12 pull-right">
+ 		<button class="btn btn-md btn-primary" ng-click="refreshPreview()" id="refresh-preview-multi"><span class="glyphicon glyphicon-refresh"></span>
+ 			<h5>רענון תצוגה</h5>
+ 		</button>
+ 		<p>
+ 			על מנת לראות שינויים שבוצעו בשרטוטי פונקציות בתצןגה המקדימה, יש ללחוץ על כפתור רענון התצןגה.
+ 		</p>
+ 	</div>
+ </div>
+  <div class="row">
+ 	<div class="col-md-12 col-xs-12 pull-right">
+ 	 <div class="multi-preview-container">
+ 	 	<h3><span mathjax-bind="question.body"></span></h3>
+ 	 	<div id="plot-body" style="height: 250px; width:250px;" ng-hide="qbodyequation.length==0"></div>
+ 	 	<h4>התשובות האפשריות</h4>
+ 	 	<ol>
+ 	 		<li ng-repeat="option in question.options track by $index">
+ 	 			<span mathjax-bind="option.body"></span>
+ 	 			<div id="plot-{{$index}}" style="height: 250px; width:250px;" ng-hide="qoptionsequation[$index].length==0">
+ 	 			</div>
+ 	 		</li>
+ 	 	</ol>
+ 	 	<h4>הערה לפותר לפי תשובה</h4>
+ 	 	<ol>
+ 	 		<li ng-repeat="option in question.options">
+ 	 			<span mathjax-bind="option.comment"></span>
+ 	 		</li>
+ 	 	</ol>
+ 	 </div>
+ 	</div>
+ </div>
+
+
+
+
+<!--
+<form>
+ <p>	
+
+  <textarea ng-model="question.body" placeholder="Question body"></textarea>
+
+ </p>
+ <p>
+
+	<div  ng-repeat="option in question.options track by $index" for="{{option}}">
+		<input type="text" ng-model="option.body" placeholder="option">
+		<input type="text" ng-model="option.comment" placeholder="comment">
+		<input type="radio" name="answer" ng-checked="isAnswer($index)" ng-click="setAnswer($index)" ng-model="answer" class="magic-radio">
+		<button ng-click="deleteOption($index)">Delete option</button>
+ 	</div>
+
+ </p>
+
+</form>
+<button ng-click="addOption()">New option</button>
+<button ng-click="commitQuestion()">Save</button>
+
+
+<hr>
+{{answer}}
+<hr>
+{{question | json}}
+-->

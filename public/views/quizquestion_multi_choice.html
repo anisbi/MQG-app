@@ -1,0 +1,13 @@
+<h3>{{question.body}}</h3>
+<p>{{qtype_message}}</p>
+<p>
+<form>
+	<div ng-repeat="option in question.options track by $index">
+		<input type="radio" ng-model="$parent.choiceVal" name="choice" value="{{$index}}">
+		<span mathjax-bind="option.body"></span>
+	
+	</div>
+	<button ng-click="submitSolution()">Submit</button>
+</form>
+</p>
+{{choiceVal}}
