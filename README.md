@@ -5,6 +5,10 @@ MQG is a web app, allowing teachers to write questionnaires for students to solv
 The app also provides basic user management.
 # Prototype
 For the prototype we implemented a 'multiple choice' question type. We are using MathJax and function-plot to allow the writer to be more expressive.
+# Deployment
+At this stage the Prototype is deployed using Azure.
+
+[Prototype deployment](http://mqg.azurewebsites.net/#/home)
 # About me
 Anis Bishara 
 anis.bishara1@gmail.com
