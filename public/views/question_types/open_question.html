@@ -1,0 +1,39 @@
+<form>
+ <textarea rows="5" id="question-body" ng-model="question.body" placeholder="הזן כאן גוף השאלה"></textarea>
+ <div ng-repeat="equation in equations track by $index" for="{{equation}}">
+ 	<input type="text" ng-model="equation.equation">
+ 	<input type="text" ng-model="equation.equationComment">
+ 	<select ng-model="equation.equationType">
+ 		<option value="fn">רגילה</option>
+ 		<option value="im">סתומה</option>
+ 	</select>
+ </div>
+</form>
+
+<button class="btn btn-md btn-primary" ng-click="addGraph()">
+ <span class="glyphicon glyphicon-plus" id="multi-new-option-glyph"></span>
+ <h5 class="center-block" >הוסף תשובה</h5>
+</button>
+<button class="btn btn-md btn-primary" ng-click="commitQuestion()">
+ <span class="glyphicon glyphicon-floppy-save" id="open-save-question-glyph"></span>
+ <h5 class="center-block">שמור שאלה</h5>
+</button>
+<button class="btn btn-md btn-primary" ng-click="refreshPreview()" id="refresh-preview-multi"><span class="glyphicon glyphicon-refresh"></span>
+	<h5>רענון תצוגה</h5>
+</button>
+<div class="preview">
+	<h2>Body</h2>
+	<span mathjax-bind="question.body"></span>
+	<h2>graphs</h2>
+	<div class="graphs-preview" ng-repeat="equation in equations track by $index" for="{{equation}}" style="display: inline;">
+		<div id="plot-{{$index}}" style="height: 250px; width:250px;"></div>
+	</div> 
+</div>
+
+
+<div style="direction: ltr;">
+<hr>
+{{equations | json}}
+<hr>
+{{question | json}}
+</div>

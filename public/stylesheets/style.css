@@ -30,6 +30,13 @@ small {
 	font-size: 13px;
 }
 
+select {
+    color: white;
+    background-color: #1E596A;
+    border: 1px solid #1E596A;
+}
+
+
 .text-muted {
 	color: #4ABCDC;
 }
@@ -192,7 +199,7 @@ input[type=text] {
 	border: 0px solid gray;
 }
 
-input[type=text]:focus, textarea:focus {
+input[type=text]:focus, textarea:focus, select:focus {
 	outline: none !important;
 	border-color: #4ABCDC;
 	box-shadow: 0 0 10px #9ecaed;
@@ -235,3 +242,5 @@ input[type=text]:focus, textarea:focus {
 .function-plot {
 	direction: ltr !important;
 }
+
+
