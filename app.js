@@ -5,6 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var cloudinary = require('cloudinary');
+var multer = require('multer');
+//var ng-file-upload = require('ng-file-upload');
+
 require('./models/Questionnaire');
 require('./models/Question');
 require('./models/Solution');
@@ -13,8 +17,22 @@ var users = require('./routes/users');
 
 var app = express();
 
-//db connect
+app.use('/ng-file-upload', express.static(__dirname + '/node_modules/ng-file-upload/dist/'));
+app.use('/cloudinary', express.static(__dirname + '/node_modules/cloudinary/'));
+app.use('/angular-file-upload', express.static(__dirname + '/node_modules/angular-file-upload/dist/'));
+app.use('/angular-drag-and-drop-lists', express.static(__dirname + '/node_modules/angular-drag-and-drop-lists/'));
 
+
+
+//cloudinary setup
+cloudinary.config({ 
+  cloud_name: 'mqg-app', 
+  api_key: '915422969141235', 
+  api_secret: 'C45ncwZGLu1lZe86oQ3DDcdUcuc' 
+});
+
+
+//db connect
 mongoose.connect('mongodb://localhost:27017/qmaker2');
 //mongoose.connect('mongodb://mradmin:QSAd32$a{x@ds149479.mlab.com:49479/mqg-app')
 
@@ -65,5 +83,28 @@ app.use(function(err, req, res, next) {
 });
 
 
+app.use(multer({
 
+ dest: './uploads/'
+
+}).any());
+
+module.exports = {
+
+uploadImage: function(req, res, next) {
+   if(req.files.file) {
+     cloudinary.uploader.upload(req.files.file.path, function(result) {
+       if (result.url) {
+         req.imageLink = result.url;
+         console.log(result.url);
+         next();
+       } else {
+         res.json(error);
+       }
+     });
+   } else {
+     next();
+   }
+ }
+};
 module.exports = app;

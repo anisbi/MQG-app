@@ -5,9 +5,7 @@
 
 
 angular.module('qmaker')
-.controller('mTestCtrl', function($scope) {
-	$scope.test = 'test yo';
-})
+
 
 /*
 	Controller used when creating a new question of 'multi_choice'

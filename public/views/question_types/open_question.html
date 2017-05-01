@@ -10,6 +10,16 @@
  </div>
 </form>
 
+<hr>
+ Upload File:
+ 
+ <form>
+   <input type="file" nv-file-select="fileSelected($files)" accept="'image/*'">
+   <input type="submit" ng-click="uploadFile()" >
+ </form>
+
+
+<hr>
 <button class="btn btn-md btn-primary" ng-click="addGraph()">
  <span class="glyphicon glyphicon-plus" id="multi-new-option-glyph"></span>
  <h5 class="center-block" >הוסף תשובה</h5>
@@ -36,4 +46,6 @@
 {{equations | json}}
 <hr>
 {{question | json}}
+<hr>
+{{filesUploaded | json}}
 </div>

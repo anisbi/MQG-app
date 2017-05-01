@@ -1,4 +1,10 @@
-var app = angular.module('qmaker', ['ui.router', 'ui.bootstrap']);
+var app = angular.module('qmaker', 
+	[
+	 'ui.router', 
+	 'ui.bootstrap',
+	 'angularFileUpload',
+	 'dndLists'
+	]);
 
 
 /*
@@ -82,6 +88,17 @@ function($stateProvider, $urlRouterProvider) {
 	 	url: '/questionnaires/{id}/new/open_question',
 	 	templateUrl: '/views/question_types/open_question.html',
 	 	controller: 'openQuestionCtrl',
+	 	resolve: {
+	 		questionnaire: ['$stateParams', 'qstnrs', function($stateParams, qstnrs){
+	 			return qstnrs.get($stateParams.id);
+	 		}]
+	 	}
+	 })
+
+	 .state('pair_matching', {
+	 	url: '/questionnaires/{id}/new/pair_matching',
+	 	templateUrl: '/views/question_types/pair_matching.html',
+	 	controller: 'pairMatchingCtrl',
 	 	resolve: {
 	 		questionnaire: ['$stateParams', 'qstnrs', function($stateParams, qstnrs){
 	 			return qstnrs.get($stateParams.id);

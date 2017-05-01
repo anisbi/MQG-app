@@ -221,6 +221,8 @@ input[type=text]:focus, textarea:focus, select:focus {
 .btn-md, .btn-group-md>.btn {
 	border-radius: 0px;
 }
+
+
 #delete-multi-option-btn {
 	padding: 4px 5px;
 }
@@ -243,4 +245,43 @@ input[type=text]:focus, textarea:focus, select:focus {
 	direction: ltr !important;
 }
 
+.custom-container {
+	margin: 23px;
+}
 
+.panel-heading {
+	background-color: #4ABCDC;
+}
+
+.panel-body {
+	background-color: #7ed0e7;
+}
+
+.add-button-list {
+	font-size: 23px;
+}
+
+.add-button-list:hover {
+	color: #00ff80;
+}
+.btn-add-list-item {
+	margin-bottom: 11px;
+}
+
+.list-panel-heading {
+    padding: 7px 7px 12px 15px;
+}
+
+.cstm-btn-active {
+	background-color: #37CA63 !important;
+}
+
+.btn-group>.btn, .btn-group-vertical>.btn {
+    margin-left: -4px !important;
+	float: none !important; 
+}
+
+.custom-btn-group {
+    box-shadow: 0 0 10px #9ecaed;
+    margin-left: 17px;
+}

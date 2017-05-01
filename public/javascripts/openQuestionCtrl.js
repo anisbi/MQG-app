@@ -11,7 +11,8 @@ angular.module('qmaker')
 '$location',
 'questionnaire',
 'qstnrs',
-function($scope, $location, questionnaire, qstnrs) {
+
+function($scope, $location, questionnaire, qstnrs, $upload) {
 	
 //Template for new question
 $scope.question = {
@@ -32,6 +33,7 @@ $scope.question = {
 
 $scope.equations = $scope.question.publicdata.equations.equationsArray;
 
+//Adds a graph to the question content
 $scope.addGraph = function() {
 	$scope.question.publicdata.equations.equationsArray.push(
 	 {
@@ -43,6 +45,7 @@ $scope.addGraph = function() {
 	//$scope.equations = $scope.question.publicdata.equations.equationsArray;
 }
 
+//Refreshes the function-plot in preview
 $scope.plotError = false;
 $scope.refreshPreview = function() {
 	
@@ -79,6 +82,28 @@ $scope.refreshPreview = function() {
 		}
 	}
 }
+
+//Handles file uploads.
+$scope.uploadFile = function(){
+	console.log('in upload file');
+ $scope.fileSelected = function(files) {
+		console.log('in files');
+     if (files && files.length) {
+
+        $scope.file = files[0];
+     }
+
+     $upload.upload({
+       url: '/api/upload', //node.js route
+       file: $scope.file
+     })
+     .success(function(data) {
+       console.log(data, 'uploaded');
+      });
+
+    };
+};
+
 
 
 }]);
