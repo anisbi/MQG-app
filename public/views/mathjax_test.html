@@ -1,0 +1,131 @@
+<div class="container">
+	<div style="direction: ltr;">{{models}}</div>
+	<div class="row" style="margin-bottom: 23px;">
+		<div class="col-md-12 col-xs-12">
+			<div class="btn-group custom-btn-group" role="group">
+				<button ng-class="{'cstm-btn-active': addListItemActive == true}" class="btn btn-md btn-primary crd-mtching-list-btn" ng-click="addListItem()">
+					<span class="glyphicon glyphicon-plus" id="card-matching-new-card-glyph"></span>
+	 	 			<h5 class="center-block" >הוסף כרטיסיה</h5>
+	 			</button>
+	 			<button ng-class="{'cstm-btn-active': addToList == 1}" ng-show="listLists" class="btn btn-md btn-primary crd-mtching-list-btn" ng-click="setList(1)">
+					<span class="glyphicon glyphicon-list" id="multi-new-option-glyph"></span>
+					<h5 class="center-block" >{{list1}}</h5>
+				</button>
+
+				<button ng-class="{'cstm-btn-active': addToList == 2}" ng-show="listLists" class="crd-mtching-list-btn btn btn-md btn-primary" ng-click="setList(2)">
+					<span class="glyphicon glyphicon-list" id="multi-new-option-glyph"></span>
+					<h5 class="center-block" >{{list2}}</h5>
+				</button>
+
+				<button ng-class="{'cstm-btn-active': addToList == 3}" ng-show="listLists" class="crd-mtching-list-btn btn btn-md btn-primary" ng-click="setList(3)">
+					<span class="glyphicon glyphicon-list" id="multi-new-option-glyph"></span>
+					<h5 class="center-block" >{{list3}}</h5>
+				</button>
+				<br class="visible-xs">
+				<button ng-class="{'cstm-btn-active': cardType == 1}" ng-show="listCardType" class="crd-mtching-list-btn btn btn-md btn-primary" ng-click="setType(1)">
+	  				<span class="	glyphicon glyphicon-signal" id="multi-new-option-glyph"></span>
+	  				<h5 class="center-block" >Graph</h5>
+	 			</button>
+
+	 			<button ng-class="{'cstm-btn-active': cardType == 2}" ng-show="listCardType" class="crd-mtching-list-btn btn btn-md btn-primary" ng-click="setType(2)">
+	  				<span class="glyphicon glyphicon-font" id="multi-new-option-glyph"></span>
+	  				<h5 class="center-block" >Text</h5>
+	 			</button>
+
+			</div> <!-- Button group -->
+
+			<button class=" btn btn-md btn-primary" ng-click="commitQuestion()">
+				<span class="glyphicon glyphicon-floppy-save" id="multi-new-option-glyph"></span>
+				<h5 class="center-block">שמור שאלה</h5>
+			</button>
+		</div>
+	</div>
+
+	<div class="row" style="margin-bottom: 13px;">
+	<div class="col-md-12 col-xs-12">
+	 <div ng-show="cardType == 1 && showContentInput == true">
+	  <label for="eqType">סוג משוואה</label>
+	  <select name="eqType" ng-model="equationType">
+ 		<option value="fn">רגילה</option>
+ 		<option value="im">סתומה</option>
+ 	</select>
+ 		<label for="eqContent">המשוואה</label>
+ 		<input name="eqContent" type="text" ng-model="equationContent" placeholder="x^2+1 :דוגמה" style="direction:ltr;">
+ 	  	<button ng-click="commitItem()" class="btn btn-xs btn-primary">הוסף <span class="	glyphicon glyphicon-ok"></span></button>
+ 	 </div>
+ 	 <div ng-show="cardType == 2 && showContentInput == true">
+ 	 	<label for="textContent">תוכן הכרטיסיה:</label>
+ 		<input type="text" name="textContent" ng-model="textContent" style="width: 258;">
+ 		<button ng-click="commitItem()" class="btn btn-xs btn-primary">הוסף <span class="glyphicon glyphicon-ok"></span></button>
+ 	 </div>
+	</div>
+	</div>
+
+
+
+	<div class="row">
+		<div class="col-md-4 col-xs-4 col-lg-4">
+			<div class="panel-heading list-panel-heading card-matching-list-header text-center">
+				<span ng-hide="editList1" class="pull-right glyphicon glyphicon-pencil cstm-glyph-edit" ng-click="editListName(1)"></span>
+				<span ng-show="editList1" class="pull-right glyphicon glyphicon-floppy-save cstm-glyph-edit" ng-click="editList1=false"></span>
+				<input class="text-center" ng-show="editList1" name="eqContent" type="text" ng-model="list1" focus="{{editList1}}" ng-blur="editList1=false">
+				 <span ng-hide="editList1"> {{list1}}</span>
+			</div>
+			<div class="panel-body">
+			 <ul dnd-list="models.lists.listA" style="min-height: 111px; padding-right: 0px;"
+			 	 dnd-allowed-types="models.allowedTypes.listA">
+				<li ng-repeat="item in models.lists.listA"
+			        dnd-draggable="item"
+			        dnd-moved="models.lists.listA.splice($index, 1)"
+			        dnd-effect-allowed="move" dnd-type="item.data.type"
+			        class="center-block text-center cstm-draggable-card">
+				        <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+				        <div ng-show="item.type == 'function'" id="plot-A-{{$index}}" style="height: 250px; width:250px;"></div>
+	    		</li>
+			 </ul>
+			</div>
+		</div>
+		<div class="col-md-4 col-xs-4 col-lg-4">
+			<div class="panel-heading list-panel-heading card-matching-list-header text-center">
+				<span ng-hide="editList2" class="pull-right glyphicon glyphicon-pencil cstm-glyph-edit" ng-click="editListName(2)"></span>
+				<span ng-show="editList2" class="pull-right glyphicon glyphicon-floppy-save cstm-glyph-edit" ng-click="editList2=false"></span>
+				<input class="text-center" ng-show="editList2" name="eqContent" type="text" ng-model="list2" focus="{{editList2}}" ng-blur="editList2=false">
+				 <span ng-hide="editList2"> {{list2}}</span>
+			</div>
+			<div class="panel-body">
+			 <ul dnd-list="models.lists.listB" style="min-height: 111px;"
+			 	dnd-allowed-types="models.allowedTypes.listB">
+				<li ng-repeat="item in models.lists.listB"
+			        dnd-draggable="item"
+			        dnd-moved="models.lists.listB.splice($index, 1)"
+			        dnd-effect-allowed="move" 
+			        class="center-block text-center" dnd-type="item.data.type">
+				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-B-{{$index}}" style="height: 250px; width:250px;"></div>
+	    		</li>
+			 </ul>
+			</div>
+		</div>
+		<div class="col-md-4 col-xs-4 col-lg-4">
+			<div class="panel-heading list-panel-heading card-matching-list-header text-center">
+				<span ng-hide="editList3" class="pull-right glyphicon glyphicon-pencil cstm-glyph-edit" ng-click="editListName(3)"></span>
+				<span ng-show="editList3" class="pull-right glyphicon glyphicon-floppy-save cstm-glyph-edit" ng-click="editList3=false"></span>
+				<input class="text-center" ng-show="editList3" name="eqContent" type="text" ng-model="list3" focus="{{editList3}}" ng-blur="editList3=false">
+				 <span ng-hide="editList3"> {{list3}}</span>
+			</div>
+			<div class="panel-body">
+			 <ul dnd-list="models.lists.listC" style="min-height: 111px;"
+			 	dnd-allowed-types="models.allowedTypes.listC">
+				<li ng-repeat="item in models.lists.listC"
+			        dnd-draggable="item"
+			        dnd-moved="models.lists.listC.splice($index, 1)"
+			        dnd-effect-allowed="move" 
+			        class="center-block text-center" dnd-type="item.data.type">
+				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-C-{{$index}}" style="height: 250px; width:250px;"></div>
+	    		</li>
+			 </ul>
+			</div>
+		</div>
+	</div>
+</div>

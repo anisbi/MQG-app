@@ -1,5 +1,4 @@
 <div style="direction:ltr;">{{models | json}}<br><hr><br>
-{{addToList}}</div>
 <div class="custom-container">
 
 <div class="row" style="margin-bottom: 23px;">
@@ -38,7 +37,7 @@
 </div>
 <div class="row">
 	<div class="col-md-12 col-xs-12">
-	 <div ng-show="listItemType == 1">
+	 <div ng-show="listItemType == 1 && showContentInput == true">
 	  <label for="eqType">סוג משוואה</label>
 	  <select name="eqType" ng-model="equationType">
  		<option value="fn">רגילה</option>
@@ -48,7 +47,7 @@
  		<input name="eqContent" type="text" ng-model="equationContent" placeholder="x^2+1 :דוגמה" style="direction:ltr;">
  	  	<button ng-click="commitItem()" class="btn btn-xs btn-primary">הוסף <span class="	glyphicon glyphicon-ok"></span></button>
  	 </div>
- 	 <div ng-show="listItemType == 2">
+ 	 <div ng-show="listItemType == 2 && showContentInput == true">
  	 	<label for="textContent">תוכן הכרטיסיה:</label>
  		<input type="text" name="textContent" ng-model="textContent" style="width: 258;">
  		<button ng-click="commitItem()" class="btn btn-xs btn-primary">הוסף <span class="glyphicon glyphicon-ok"></span></button>
@@ -62,7 +61,7 @@
 			List A
 		</div>
 		<div class="panel-body">
-			<ul dnd-list="models.lists.A">
+			<ul dnd-list="models.lists.A" style="min-height: 111px;">
 				<li ng-repeat="item in models.lists.A"
 			        dnd-draggable="item"
 			        dnd-moved="models.lists.A.splice($index, 1)"
@@ -77,7 +76,7 @@
 	<div class="col-md-6 col-xs-6">
 		<div class="panel-heading">List B</div>
 		<div class="panel-body">
-			<ul dnd-list="models.lists.B">
+			<ul dnd-list="models.lists.B" style="min-height: 111px;">
 				<li ng-repeat="item in models.lists.B"
 			        dnd-draggable="item"
 			        dnd-moved="models.lists.B.splice($index, 1)"
