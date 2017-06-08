@@ -226,7 +226,7 @@ input[type=text]:focus, textarea:focus, select:focus {
 #delete-multi-option-btn {
 	padding: 4px 5px;
 }
-#multi-new-option-glyph, #multi-save-question-glyph {
+#multi-new-option-glyph, #multi-save-question-glyph, #card-matching-new-card-glyph {
 	font-size: 23px;
 }
 
@@ -282,6 +282,64 @@ input[type=text]:focus, textarea:focus, select:focus {
 }
 
 .custom-btn-group {
-    box-shadow: 0 0 10px #9ecaed;
+    box-shadow: 0 0 23px #9ecaed;
     margin-left: 17px;
+}
+
+.cstm-edit-btn span {
+	font-size: 17px;
+}
+
+.cstm-glyph-edit {
+	margin-top: 3px;
+}
+
+.card-matching-list-header {
+	height: 44px !important;
+}
+
+.crd-mtching-list-btn {
+	min-width: 70px;
+	min-height: 75px;
+}
+
+/**
+ * The dndDraggingSource class will be applied to
+ * the source element of a drag operation. It makes
+ * sense to hide it to give the user the feeling
+ * that he's actually moving it.
+ */
+ul[dnd-list] .dndDraggingSource {
+    display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be
+ * added to the dnd-list while the user is dragging
+ * over it.
+ */
+ul[dnd-list] .dndPlaceholder {
+    background-color: #27778E;
+    display: block;
+    height: 111px;
+}
+
+.cstm-draggable-card {
+	height: 253px;
+	width: 253px;
+	background-color: #4ABCDC;
+	border: 1px solid #ddd;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+}
+
+.cstm-card-mathjax {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+    padding-top: 100px;
+    font-size: 23px;
 }

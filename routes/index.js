@@ -1,11 +1,17 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
 var mongoose = require('mongoose');
 var Questionnaire = mongoose.model('Questionnaire');
 var Question = mongoose.model('Question');
 var Solution = mongoose.model('Solution');
+var User 	 = mongoose.model('User');
 
-
+var jwt = require('express-jwt');
+var auth = jwt({
+	secret: 'T0PPSY_KR!77S',
+	userProperty: 'payload'
+});
 
 
 
@@ -13,6 +19,32 @@ var Solution = mongoose.model('Solution');
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+
+
+
+module.exports.profileRead = function(req, res) {
+	if (!req.payload._id) {
+		req.status(401).json({
+			"message" : "UnauthorizedError: private profile"
+		});
+	} else {
+		User
+			.findById(req.payload._id)
+			.exec(function(err, user) {
+				if (err) {
+					res.status(404).json({
+						"message" : "User not found"
+					});
+				}
+				else {
+					res.status(200).json(user);
+				}
+			});
+	}
+
+};
+
+router.get('/profile', auth, this.profileRead);
 
 /* GET all questionnaires. */
 router.get('/questionnaires', function(req, res, next) {
@@ -274,7 +306,73 @@ router.param('solution', function(req, res, next, id) {
 
 
 
+register = function(req, res) {
+	/**
+		TODO: Input checks.
+	*/
+	var user = new User();
+	
+	user.name = req.body.name;
+	user.email = req.body.email;
+	user.password = req.body.password;
 
+	if (user.name.length === 0 || user.email.length === 0 || user.password.length === 0) {
+		res.status(200);
+		res.json({
+			"result" : "failure",
+			"message" : "Please fill all fields"
+		});
+		return;
+	}
+
+	else {
+		user.setPassword(req.body.password);
+
+		user.save(function(err) {
+			if (err) {
+				if (err.code === 11000) {
+				  res.status(200).json({
+				    "result" : "failure",
+				    "message": "User exists with given email address.",
+				    "errcode": err.code
+				  });
+				  return;
+				}
+			}
+			var token;
+			token = user.generateJwt();
+			res.status(200);
+			res.json({
+				"result": "successful",
+				"token": token
+			});
+		});
+	}
+};
+
+router.post('/register', register);
+
+login = function(req, res) {
+
+	passport.authenticate('local', function(err, user, info){
+		if (err) { res.status(404).json(err); return; }
+		
+		var token;
+		if (user) {
+			token = user.generateJwt();
+			res.status(200);
+			res.json({
+				"token" : token
+			});
+		} else {
+			//Case user not found
+			res.status(401).json(info);
+		}
+	})(req, res);
+
+};
+
+router.post('/login', login);
 
 module.exports = router;
 

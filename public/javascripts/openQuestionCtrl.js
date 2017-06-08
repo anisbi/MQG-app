@@ -13,7 +13,7 @@ angular.module('qmaker')
 'qstnrs',
 
 function($scope, $location, questionnaire, qstnrs, $upload) {
-	
+
 //Template for new question
 $scope.question = {
 	qtype: 'open_question',

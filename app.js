@@ -8,10 +8,15 @@ var mongoose = require('mongoose');
 var cloudinary = require('cloudinary');
 var multer = require('multer');
 //var ng-file-upload = require('ng-file-upload');
+var passport = require('passport');
 
 require('./models/Questionnaire');
 require('./models/Question');
 require('./models/Solution');
+require('./models/User');
+require('./config/passport');
+
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -21,8 +26,8 @@ app.use('/ng-file-upload', express.static(__dirname + '/node_modules/ng-file-upl
 app.use('/cloudinary', express.static(__dirname + '/node_modules/cloudinary/'));
 app.use('/angular-file-upload', express.static(__dirname + '/node_modules/angular-file-upload/dist/'));
 app.use('/angular-drag-and-drop-lists', express.static(__dirname + '/node_modules/angular-drag-and-drop-lists/'));
-
-
+/*
+app()
 
 //cloudinary setup
 cloudinary.config({ 
@@ -30,7 +35,7 @@ cloudinary.config({
   api_key: '915422969141235', 
   api_secret: 'C45ncwZGLu1lZe86oQ3DDcdUcuc' 
 });
-
+*/
 
 //db connect
 mongoose.connect('mongodb://localhost:27017/qmaker2');
@@ -48,8 +53,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(passport.initialize());
 app.use('/', routes);
-app.use('/users', users);
+//app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -80,6 +86,14 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   });
+});
+
+// catch unauthorized errors
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401);
+    res.json({"message" : err.name + ": "+err.message});
+  }
 });
 
 

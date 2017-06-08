@@ -23,25 +23,16 @@ angular.module('qmaker')
 		$scope.textContent = '';
 		$scope.addListItemActive = false;
 		$scope.listChoice = false;
+		$scope.showContentInput = false;
 	}
 	$scope.resetControls();
 
 	$scope.addListItem = function() {
 		$scope.listChoice = !$scope.listChoice;
 		$scope.addListItemActive = $scope.listChoice;
-		/*
-		if ($scope.listChoice == false) {
-			$scope.listType = false;
-			$scope.addToList =0;
-			$scope.listItemType =0;
-			$scope.equationContent = '';
-			$scope.equationType = 'fn';
-			$scope.textContent = '';
-		}
-		*/
-
-		//$scope.addListItemActive = true;
-		//console.log('listAControl = '+$scope.listAControl);
+		if ($scope.addToList != 1 && $scope.addToList != 2) $scope.listType = false;
+		else $scope.listType = $scope.addListItemActive;
+		$scope.showContentInput = $scope.listChoice;
 	}
 
 	$scope.setList = function(list) {

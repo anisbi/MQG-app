@@ -3,13 +3,14 @@ var app = angular.module('qmaker',
 	 'ui.router', 
 	 'ui.bootstrap',
 	 'angularFileUpload',
-	 'dndLists'
+	 'dndLists',
+
 	]);
 
 
 /*
 app.config(['$httpProvider', function($httpProvider) {
-    //initialize get if not there
+    //initialize	 get if not there
     if (!$httpProvider.defaults.headers.get) {
         $httpProvider.defaults.headers.get = {};    
     }    
@@ -138,8 +139,17 @@ function($stateProvider, $urlRouterProvider) {
 	 })
 
 
+	 .state('register', {
+	 	url: '/register',
+	 	templateUrl: '/views/register.html',
+	 	controller: 'registerCtrl',
+	 })
 	
-	
+	.state('login', {
+	 	url: '/login',
+	 	templateUrl: '/views/login.html',
+	 	controller: 'loginCtrl',
+	 })
 
 	 //$urlRouterProvider.otherwise('home');
 	 $urlRouterProvider.otherwise(function($injector, $location){
@@ -244,6 +254,25 @@ app.directive("mathjaxBind", function() {
         }]
     };
 });
+
+//Focus an input element
+app.directive('focus',
+	function($timeout) {
+	 return {
+	 scope : {
+	   trigger : '@focus'
+	 },
+	 link : function(scope, element) {
+	  scope.$watch('trigger', function(value) {
+	    if (value === "true") {
+	      $timeout(function() {
+	       element[0].focus();
+	      });
+	   }
+	 });
+	 }
+	};
+}); 
 
 /*
 	Filter, replaces '\n' with '<br/>'.
