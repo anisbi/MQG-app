@@ -8,22 +8,28 @@
   function authentication($http, $window) {
 
     var saveToken = function(token) {
-      $window.localStorage['mean-token'] = token;	
+      console.log('setting local storage to: ',token);
+      $window.localStorage['mqg-app-token'] = token;	
     };
 
     var getToken = function() {
-      return $window.localStorage['mean-token'];
+      console.log('localStorage', $window.localStorage['mqg-app-token']);
+      return $window.localStorage['mqg-app-token'];
     };
 
     var isLoggedIn = function() {
       var token = getToken();
+      console.log('typeof token',typeof( token ));
       var payload;
 
       if (token) {
         payload = token.split('.')[1];
-        payload = $window.atb(payload);
+        payload = $window.atob(payload);
         payload = JSON.parse(payload);
-
+        console.log('payload',payload);
+        //console.log('exp:',payload.exp);
+        //console.log('datenow / 100', (Date.now() / 1000));
+        //console.log('equation', (payload.exp > Date.now() / 1000));
         return payload.exp > Date.now() / 1000;
       }
       else {
@@ -71,7 +77,7 @@
     };
 
     logout = function() {
-      $window.localStorage.removeItem('mean-token');
+      $window.localStorage.removeItem('mqg-app-token');
     };
 
 
@@ -81,9 +87,11 @@
       isLoggedIn : isLoggedIn,
       register : register,
       login : login,
+      currentUser : currentUser,
       logout : logout
     };
 
   }
 
 })();
+
