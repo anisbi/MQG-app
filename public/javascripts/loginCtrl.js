@@ -1,6 +1,6 @@
 angular.module('qmaker')
 
-.controller('loginCtrl', function($scope, $location, authentication) {
+.controller('loginCtrl', function($scope, $location, $window, authentication) {
 
   $scope.email = $scope.password = "";
 
@@ -19,7 +19,7 @@ angular.module('qmaker')
       	console.log("Failed to login.",res.data.message);
       }
       else if (res.data.result === "success") {
-      	$location.path('profile');
+        $window.location.reload();
       }
     });
   };

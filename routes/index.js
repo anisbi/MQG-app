@@ -13,7 +13,9 @@ var auth = jwt({
 	userProperty: 'payload'
 });
 
-
+var verifyId = function(id) {
+  
+};
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -24,29 +26,133 @@ router.get('/', function(req, res, next) {
 
 module.exports.profileRead = function(req, res) {
 	if (!req.payload._id) {
-		req.status(401).json({
+		res.status(401).json({
+			"result" : "failure",
 			"message" : "UnauthorizedError: private profile"
 		});
-	} else {
+	} 
+	else {
+		/*
 		User
 			.findById(req.payload._id)
 			.exec(function(err, user) {
 				if (err) {
-					res.status(404).json({
-						"message" : "User not found"
-					});
+				  res.status(404).json({
+					"result" : "failure",
+					"message" : "User not found"
+				  });
 				}
 				else {
-					res.status(200).json(user);
+				  res.status(200).json(user);
 				}
 			});
+		*/
+		var user = verifyId(req.payload._id);
+		if (user === undefined) {
+		  res.status(404).json({
+			"result" : "failure",
+			"message" : "User not found"
+		  });
+		}
+		else {
+
+			res.status(200).json({
+								  "result" : "success2",
+								  "tyepeof" : user
+								});
+		}
 	}
 
 };
 
 router.get('/profile', auth, this.profileRead);
 
-/* GET all questionnaires. */
+module.exports.verifyUser = function(req, res, next) {
+  //res.status(200).json({"req body" : req.payload._id});
+  //next.send(req.payload._id);
+  //req.id = req.payload._id;
+  //next();
+
+  	if (!req.payload._id) {
+		res.status(401).json({
+			"result" : "failure",
+			"message" : "UnauthorizedError: private profile"
+		});
+	}
+	else {
+	  var id = req.payload._id;
+
+      User
+         .findById(id)
+	     .exec(function(err, user) { 
+	  	   if (err) {
+	  	     res.status(401).json({
+			   "result" : "failure",
+			   "message" : "User not found."
+			 });
+	  	   }
+	  	   else {
+	  	   	//User with valid ID.
+	  	     next();
+	  	   }
+	
+	  });
+	}
+};
+
+module.exports.test2 = function(req, res) {
+  res.status(200).json({"in next" : req.payload});
+};
+
+router.get('/test', auth, this.verifyUser, this.test2);
+//router.get('/test', auth, verifyUser, this.testRoute);
+
+module.exports.getQuestionnaires = function(req, res) {
+
+
+  Questionnaire.find({
+  	"author.id" : req.payload._id
+  }).exec(function (err, questionnaires) {
+  	if (err) {
+  		next(err);
+  	}
+  	else {
+	  res.status(200).json({
+    	"result" : "success",
+    	"data" : questionnaires
+	  });
+  	}
+  });
+
+
+};
+router.get('/questionnaires', auth, this.verifyUser, this.getQuestionnaires);
+
+module.exports.newQuestionnaire = function(req, res) {
+  var questionnaire = new Questionnaire(req.body);
+  questionnaire.save(function(err, questionnaire) {
+  	if (err) { return next(err); }
+  	res.status(200).json({
+  	  "result" : "success",
+  	  "data" : questionnaire
+  	});
+  });
+  
+};
+router.post('/questionnaires', auth, this.verifyUser, this.newQuestionnaire);
+
+/*
+	function(req, res, next) {
+	var questionnaire = new Questionnaire(req.body);
+
+	questionnaire.save(function(err, questionnaire) {
+		if (err) { return next(err); }
+
+		res.json(questionnaire);
+	});
+});
+*/
+/* GET all questionnaires. 
 router.get('/questionnaires', function(req, res, next) {
 	Questionnaire.find(function(err, questionnaires) {
 		if (err) { return next(err); }
@@ -54,6 +160,43 @@ router.get('/questionnaires', function(req, res, next) {
 		res.json(questionnaires);
 	});
 });
+*/
+
+module.exports.verifyQuestionnaire = function(req, res) {
+  if (req.questionnaire.author.id === req.payload._id) {
+  	req.questionnaire.populate('questions', function (err, questionnaire) {
+		if (err) { return next(err); }
+
+		res.status(200).json({
+			"result" : "successful",
+			"data" : questionnaire
+		});
+	});
+  }
+  else {
+  	res.status(401).json({
+      "result" : "failure",
+      "message" : "Unauthorized Access."
+	 });
+  }
+};
+router.get('/questionnaires/:questionnaire', auth, this.verifyUser, this.verifyQuestionnaire);
+
+
+/* GET questionnaire with associated questions. 
+router.get('/questionnaires/:questionnaire', function(req, res, next) {
+	
+	req.questionnaire.populate('questions', function (err, questionnaire) {
+		if (err) { return next(err); }
+
+		res.json(questionnaire);
+	});
+
+
+	
+
+});
+*/
 
 /*
 	Gets all solutions (questions solved by students) from db.
@@ -66,37 +209,8 @@ router.get('/solutions', function(req, res, next) {
 	});
 });
 
-/* post new questionnaire */
-router.post('/questionnaires', function(req, res, next) {
-	var questionnaire = new Questionnaire(req.body);
-
-	questionnaire.save(function(err, questionnaire) {
-		if (err) { return next(err); }
-
-		res.json(questionnaire);
-	});
-});
 
 
-/* GET questionnaire with associated questions. */
-router.get('/questionnaires/:questionnaire', function(req, res, next) {
-
-	
-	/*
-	We populate 'questions' thus exposing sensitive data (such as answer to question)
-	Should add a form of authentication in the future.
-	*/
-	
-	req.questionnaire.populate('questions', function (err, questionnaire) {
-		if (err) { return next(err); }
-
-		res.json(questionnaire);
-	});
-
-
-	
-
-});
 
 /* GET questionnaire with associated questions. (w/o answer)*/
 router.get('/quiz/:questionnaire', function(req, res, next) {
@@ -362,6 +476,7 @@ login = function(req, res) {
 			token = user.generateJwt();
 			res.status(200);
 			res.json({
+				"result" : "success",
 				"token" : token
 			});
 		} else {
@@ -373,6 +488,8 @@ login = function(req, res) {
 };
 
 router.post('/login', login);
+
+
 
 module.exports = router;
 

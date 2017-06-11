@@ -5,7 +5,28 @@ var app = angular.module('qmaker',
 	 'angularFileUpload',
 	 'dndLists',
 
-	]);
+]);
+
+
+
+
+
+app.run(
+  function($rootScope, $location, authentication) {
+  	console.log('in run');
+  	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      //console.log("from state: ",fromState);
+      //console.log("to state: ",toState);
+      //console.log("location path",$location.path());
+      if ($location.path() === '/profile' && !authentication.isLoggedIn()) {
+        $location.path('/login');
+      }
+      else if ($location.path() === '/login' && authentication.isLoggedIn()) {
+        $location.path('/profile');
+      }
+    });
+  }
+);
 
 
 /*
@@ -26,10 +47,20 @@ app.config(
 function($stateProvider, $urlRouterProvider) {
 
 	$stateProvider
+	 
+
 	 .state('home', {
 	 	url: '/home',
 	 	templateUrl: '/views/home.html',
-	 	controller: 'MainCtrl',
+	 	controller: 'homeCtrl'
+	 })
+
+/*
+	$stateProvider
+	 .state('home', {
+	 	url: '/home',
+	 	templateUrl: '/views/home.html',
+	 	controller: 'homeCtrl',
 	 	resolve: {
 	 		questionnaires: ['qstnrs', function(qstnrs) {
 	 			return qstnrs.getAll();
@@ -37,17 +68,12 @@ function($stateProvider, $urlRouterProvider) {
 	 	}
 	 })
 
-
+*/
 
 	 .state('questionnaires', {
 	 	url: '/questionnaires/{id}',
 	 	templateUrl: '/views/questionnaire.html',
-	 	controller: 'QuestionsCtrl',
-	 	resolve: {
-	 		questionnaire: ['$stateParams', 'qstnrs', function($stateParams, qstnrs){
-	 			return qstnrs.get($stateParams.id);
-	 		}]
-	 	}
+	 	controller: 'questionnairesCtrl',
 	 })
 
 	 .state('new', {
@@ -151,6 +177,12 @@ function($stateProvider, $urlRouterProvider) {
 	 	controller: 'loginCtrl',
 	 })
 
+	.state('profile', {
+	 	url: '/profile',
+	 	templateUrl: '/views/profile.html',
+	 	controller: 'profileCtrl',
+	 })
+
 	 //$urlRouterProvider.otherwise('home');
 	 $urlRouterProvider.otherwise(function($injector, $location){
 	 	$injector.invoke(['$state', function($state) {
@@ -161,19 +193,33 @@ function($stateProvider, $urlRouterProvider) {
 
 
 
-
-app.factory('qstnrs', ['$http', function($http){
+app.factory('qstnrs', ['$http', function($http, mqgAppData){
  var o = {
  	qstnrs: []
  };
 
  /* get all questionnaires */
  o.getAll = function() {
-	return $http.get('/questionnaires').then(function(res) {
+	/*return $http.get('/questionnaires').then(function(res) {
 		//angular.copy(data, o.qstnrs);
 		return res.data;
-	});
+	});*/
+
+  mqgAppData.getQuestionnaires()
+     .success(function (result) {
+     	if (result.result === "success") {
+     		console.log("retrieved all qstnrs: ",result);
+     		return result.data;
+     	}
+     	else {
+     	  return {"result":"failure"};
+     	}
+     })
+     .error(function(e) {
+     	console.log('error',e);
+     });
  };
+
 
  /* post a new questionnaire */
  o.create = function(questionnaire) {

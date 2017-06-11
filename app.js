@@ -91,7 +91,7 @@ app.use(function(err, req, res, next) {
 // catch unauthorized errors
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
-    res.status(401);
+    res.status(402);
     res.json({"message" : err.name + ": "+err.message});
   }
 });

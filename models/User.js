@@ -34,13 +34,17 @@ UserSchema.methods.validPassword = function(password) {
 
 UserSchema.methods.generateJwt = function() {
 	var expiry = new Date();
-	expiry.setDate(expiry.getDate() +7);
+	expiry.setDate(expiry.getDate() + 7);
+
+
+	//console.log('in generate jwt');
+	//console.log('setting expiry to : ',(expiry.getDate()/1000));
 
 	return jwt.sign({
 		_id: this._id,
 		email: this.email,
 		name: this.name,
-		exp: parseInt(expiry.getDate() / 1000),
+		exp: parseInt(expiry.getTime() / 1000),
 	}, "T0PPSY_KR!77S");
 };
 

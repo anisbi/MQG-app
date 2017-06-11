@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 
 var QuestionnaireSchema = new mongoose.Schema({
 	title: String,
-	author: String,
+	author: {},
+	createdon: { type: Date, default: Date.now },
 	questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question'}]
 });
 

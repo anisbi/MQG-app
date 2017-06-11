@@ -10,8 +10,13 @@
  	<script src="/javascripts/openQuestionCtrl.js"></script>
  	<script src="/javascripts/pairMatchingCtrl.js"></script>
  	<script src="/javascripts/services/authentication.service.js"></script>
+	<script src="/javascripts/services/data.service.js"></script>
 	<script src="/javascripts/registerCtrl.js"></script>
  	<script src="/javascripts/loginCtrl.js"></script>
+ 	<script src="/javascripts/navCtrl.js"></script>
+ 	<script src="/javascripts/profileCtrl.js"></script>
+ 	<script src="/javascripts/homeCtrl.js"></script>
+ 	<script src="/javascripts/questionnairesCtrl.js"></script>
  	<script type="text/x-mathjax-config">
   		MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 	</script>
@@ -32,15 +37,22 @@
  </head>
  <body ng-app="qmaker">
  	<div class="container-fluid">
-	  <nav class="navbar navbar-default">
+	  <nav class="navbar navbar-default" ng-controller="navCtrl">
 	  	<div class="container-fluid">
 	  		<div class="navbar-header pull-right">
 	  			
 	  			<a class="navbar-brand" href="#">
 	  				<span class="glyphicon glyphicon-home" id="navglyph"></span>
 	  			</a>
-	  		</div>	
+	  		</div>
+
+	  		<ul class="nav navbar-nav navbar-right">
+			  <li ng-hide="{{isLoggedIn}}"><a ng-href="#/login">Sign in</a></li>
+			  <li ng-show="{{isLoggedIn}}"><a ng-href="#/profile">{{ currentUser.name }}</a></li>
+			</ul>
+
 	  	</div>
+
 	  </nav>
 	  <!--
 	  <div class="row">
