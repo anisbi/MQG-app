@@ -1,28 +1,38 @@
+<!--div style="direction: ltr;">
+<hr>
+{{equations | json}}
+<hr>
+{{question | json}}
+<hr>
+{{filesUploaded | json}}
+</div-->
+
 <form>
  <textarea rows="5" id="question-body" ng-model="question.body" placeholder="הזן כאן גוף השאלה"></textarea>
- <div ng-repeat="equation in equations track by $index" for="{{equation}}">
+ <div ng-repeat="equation in question.publicdata.equations.equationsArray track by $index" for="{{equation}}">
  	<input type="text" ng-model="equation.equation">
  	<input type="text" ng-model="equation.equationComment">
  	<select ng-model="equation.equationType">
  		<option value="fn">רגילה</option>
  		<option value="im">סתומה</option>
  	</select>
+ 	<button class="btn btn-danger btn-xs" ng-click="deleteGraph($index)" id="delete-multi-option-btn"><span class="glyphicon glyphicon-trash"></span></button>
  </div>
 </form>
 
-<hr>
+<!--hr>
  Upload File:
  
  <form>
    <input type="file" nv-file-select="fileSelected($files)" accept="'image/*'">
    <input type="submit" ng-click="uploadFile()" >
- </form>
+ </form-->
 
 
 <hr>
 <button class="btn btn-md btn-primary" ng-click="addGraph()">
  <span class="glyphicon glyphicon-plus" id="multi-new-option-glyph"></span>
- <h5 class="center-block" >הוסף תשובה</h5>
+ <h5 class="center-block" >הוסף גרף</h5>
 </button>
 <button class="btn btn-md btn-primary" ng-click="commitQuestion()">
  <span class="glyphicon glyphicon-floppy-save" id="open-save-question-glyph"></span>
@@ -35,17 +45,11 @@
 	<h2>Body</h2>
 	<span mathjax-bind="question.body"></span>
 	<h2>graphs</h2>
-	<div class="graphs-preview" ng-repeat="equation in equations track by $index" for="{{equation}}" style="display: inline;">
+	<div class="graphs-preview" ng-repeat="equation in question.publicdata.equations.equationsArray track by $index" for="{{equation}}" style="display: inline;">
+		<div class="graph-title"><h3>{{equation.equationComment}}</h3></div>
 		<div id="plot-{{$index}}" style="height: 250px; width:250px;"></div>
 	</div> 
 </div>
 
 
-<div style="direction: ltr;">
-<hr>
-{{equations | json}}
-<hr>
-{{question | json}}
-<hr>
-{{filesUploaded | json}}
-</div>
+

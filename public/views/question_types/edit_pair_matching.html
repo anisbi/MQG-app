@@ -1,0 +1,112 @@
+<div style="direction:ltr;">{{models | json}}<br><hr><br>
+<div style="direction:ltr;">{{question | json}}<br><hr><br>
+<div class="custom-container">
+
+<div class="row" style="margin-bottom: 23px;">
+	<div class="col-md-12 col-xs-12">
+	<div class="btn-group custom-btn-group" role="group">
+	 <button ng-class="{'cstm-btn-active': addListItemActive == true}" class="btn btn-md btn-primary" ng-click="addListItem()">
+	  <span class="glyphicon glyphicon-plus" id="multi-new-option-glyph"></span>
+	  <h5 class="center-block" >הוסף כרטיסיה</h5>
+	 </button>
+
+	 <button ng-class="{'cstm-btn-active': addToList == 1}" ng-show="listChoice" class="btn btn-md btn-primary" ng-click="setList(1)">
+	  <span class="glyphicon glyphicon-list" id="multi-new-option-glyph"></span>
+	  <h5 class="center-block" >List A</h5>
+	 </button>
+
+	 <button ng-class="{'cstm-btn-active': addToList == 2}" ng-show="listChoice" class="btn btn-md btn-primary" ng-click="setList(2)">
+	  <span class="glyphicon glyphicon-list" id="multi-new-option-glyph"></span>
+	  <h5 class="center-block" >List B</h5>
+	 </button>
+
+	 <button ng-class="{'cstm-btn-active': listItemType == 1}" ng-show="listType" class="btn btn-md btn-primary" ng-click="setType(1)">
+	  <span class="	glyphicon glyphicon-signal" id="multi-new-option-glyph"></span>
+	  <h5 class="center-block" >Graph</h5>
+	 </button>
+
+	 <button ng-class="{'cstm-btn-active': listItemType == 2}" ng-show="listType" class="btn btn-md btn-primary" ng-click="setType(2)">
+	  <span class="glyphicon glyphicon-font" id="multi-new-option-glyph"></span>
+	  <h5 class="center-block" >Text</h5>
+	 </button>
+	</div>
+	<button class="btn btn-md btn-primary" ng-click="commitQuestion()">
+	  <span class="glyphicon glyphicon-floppy-save" id="multi-new-option-glyph"></span>
+	  <h5 class="center-block">שמור שאלה</h5>
+	 </button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12 col-xs-12">
+	 <div ng-show="listItemType == 1 && showContentInput == true">
+	  <label for="eqType">סוג משוואה</label>
+	  <select name="eqType" ng-model="equationType">
+ 		<option value="fn">רגילה</option>
+ 		<option value="im">סתומה</option>
+ 	</select>
+ 		<label for="eqContent">המשוואה</label>
+ 		<input name="eqContent" type="text" ng-model="equationContent" placeholder="x^2+1 :דוגמה" style="direction:ltr;">
+ 	  	<button ng-click="commitItem()" class="btn btn-xs btn-primary">הוסף <span class="	glyphicon glyphicon-ok"></span></button>
+ 	 </div>
+ 	 <div ng-show="listItemType == 2 && showContentInput == true">
+ 	 	<label for="textContent">תוכן הכרטיסיה:</label>
+ 		<input type="text" name="textContent" ng-model="textContent" style="width: 258;">
+ 		<button ng-click="commitItem()" class="btn btn-xs btn-primary">הוסף <span class="glyphicon glyphicon-ok"></span></button>
+ 	 </div>
+	</div>
+</div>
+
+ <div class="row">
+	<div class="col-md-6 col-xs-6">
+		<div class="panel-heading list-panel-heading">
+			List A
+		</div>
+		<div class="panel-body">
+			<ul dnd-list="models.lists.A" style="min-height: 111px;">
+				<li ng-repeat="item in models.lists.A"
+			        dnd-draggable="item"
+			        dnd-moved="models.lists.A.splice($index, 1)"
+			        dnd-effect-allowed="move" 
+			        class="center-block text-center">
+				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-A-{{$index}}" style="height: 250px; width:250px;"></div>
+	    		</li>
+			</ul>
+		</div>
+	</div>	
+	<div class="col-md-6 col-xs-6">
+		<div class="panel-heading">List B</div>
+		<div class="panel-body">
+			<ul dnd-list="models.lists.B" style="min-height: 111px;">
+				<li ng-repeat="item in models.lists.B"
+			        dnd-draggable="item"
+			        dnd-moved="models.lists.B.splice($index, 1)"
+			        dnd-effect-allowed="move" 
+			        class="center-block text-center">
+				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-B-{{$index}}" style="height: 250px; width:250px;"></div>
+	    		</li>
+			</ul>
+		</div>
+	</div>
+ </div>
+</div>
+</div>
+
+
+<div class="row">
+	<div ng-repeat="(listName, list) in models.lists" class="col-md-6">
+		<ul dnd-list="list">
+			<li ng-repeat="item in list"
+		        dnd-draggable="item"
+		        dnd-moved="list.splice($index, 1)"
+		        dnd-effect-allowed="move"
+		        dnd-selected="models.selected = item"
+		        ng-class="{'selected': models.selected === item}">
+		        <span ng-show="item.type == 'text'" mathjax-bind="item.label"></span>
+		        <div ng-show="item.type == 'function'" id="plot-{{listName}}-{{$index}}" style="height: 250px; width:250px;"></div>
+    		</li>
+		</ul>
+	<div>
+</div>
+
