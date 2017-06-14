@@ -114,7 +114,10 @@ module.exports.getQuestionnaires = function(req, res) {
   	"author.id" : req.payload._id
   }).exec(function (err, questionnaires) {
   	if (err) {
-  		next(err);
+  		res.status(500).json({
+  	  	    "result" : "failure",
+	  	    "message" : err
+	    });
   	}
   	else {
 	  res.status(200).json({
@@ -131,7 +134,13 @@ router.get('/questionnaires', auth, this.verifyUser, this.getQuestionnaires);
 module.exports.newQuestionnaire = function(req, res) {
   var questionnaire = new Questionnaire(req.body);
   questionnaire.save(function(err, questionnaire) {
-  	if (err) { return next(err); }
+  	if (err) { 
+  		res.status(500).json({
+  	  	    "result" : "failure",
+	  	    "message" : err
+	    });
+	    return;
+  	}
   	res.status(200).json({
   	  "result" : "success",
   	  "data" : questionnaire
@@ -165,7 +174,13 @@ router.get('/questionnaires', function(req, res, next) {
 module.exports.verifyQuestionnaire = function(req, res) {
   if (req.questionnaire.author.id === req.payload._id) {
   	req.questionnaire.populate('questions', function (err, questionnaire) {
-		if (err) { return next(err); }
+		if (err) { 
+			res.status(500).json({
+  	  	      "result" : "failure",
+	  	      "message" : err
+	   		});
+	   		return;
+		}
 
 		res.status(200).json({
 			"result" : "successful",
@@ -181,6 +196,99 @@ module.exports.verifyQuestionnaire = function(req, res) {
   }
 };
 router.get('/questionnaires/:questionnaire', auth, this.verifyUser, this.verifyQuestionnaire);
+
+
+module.exports.saveQuestion = function(req, res) {
+  var question = new Question(req.body);
+  question.questionnaire = { "id" : req.questionnaire._id };
+  question.save(function(err, question) {
+  	if (err) { 
+  		res.status(500).json({
+  	  	    "result" : "failure",
+	  	    "message" : err
+	    });
+	    return;
+  	}
+
+  	req.questionnaire.questions.push(question);
+		req.questionnaire.save(function(err, questionnaire) {
+		if (err) { 
+			res.status(500).json({
+  	  	      "result" : "failure",
+  	  	      "message" : err
+  		  	}); 
+			return;
+  		}
+	    res.status(200).json({
+  	  	  "result" : "success",
+  	  	  "data" : question
+  		}); 
+	});
+	
+  });
+};
+router.post('/questionnaires/:questionnaire/questions', auth, this.verifyUser, this.saveQuestion);
+
+module.exports.getQuestion = function(req, res) {
+  if (req.question.author.id === req.payload._id) {
+  	res.status(200).json({
+  		"result" : "success",
+  		"data" : req.question
+  	});
+  }
+  else {
+  	res.status(401).json({
+      "result" : "failure",
+      "message" : "Unauthorized Access."
+	 });
+  }
+};
+router.get('/question/:question', auth, this.verifyUser, this.getQuestion);
+
+module.exports.editQuestion = function(req, res) {
+  if (req.question.author.id === req.payload._id) {
+  	req.question.body = req.body.body;
+  	req.question.options = req.body.options;
+  	req.question.data = req.body.data;
+  	req.question.publicdata = req.body.publicdata;
+  	req.question.save(function(err, question) {
+  		if (err) { return next(err); }
+  		res.status(200).json({
+  			"result" : "success",
+  			"data" : question
+  		});
+  	});
+  }
+  else {
+  	res.status(401).json({
+      "result" : "failure",
+      "message" : "Unauthorized Access."
+	 });
+  }
+};
+router.put('/question/:question', auth, this.verifyUser, this.editQuestion);
+
+
+
+
+/* POST new question to questionnaire 
+router.post('/questionnaires/:questionnaire/questions', function(req, res, next) {
+	var question = new Question(req.body);
+	question.questionnaire = req.questionnaire;
+
+	question.save(function(err, question) {
+		if (err) { return next(err); }
+
+		req.questionnaire.questions.push(question);
+		req.questionnaire.save(function(err, questionnaire) {
+			if (err) { return next(err); }
+
+			res.json(question);
+		});
+	});
+});
+*/
+
 
 
 /* GET questionnaire with associated questions. 
@@ -226,31 +334,9 @@ router.get('/quiz/:questionnaire', function(req, res, next) {
 	//res.json(req.questionnaire);
 });
 
-/* GET question */
-router.get('/question/:question', function(req, res, next) {
-	/**IMPORTANT!
-	At the moment this is very unsecure since the solution
-	to the question can be seen. => Would allow cheating
-	*/
-	res.json(req.question);
-});
 
-/* PUT question */
-router.put('/question/:question', function(req, res, next) {
 
-	
-	//Copy fields
-	if (req.body.body) req.question.body = req.body.body;
-	if (req.body.options) req.question.options = req.body.options;
-	if (req.body.data) req.question.data = req.body.data;
-	if (req.body.publicdata) req.question.publicdata = req.body.publicdata;
-	//Save
-	req.question.save(function(err, newq) {
-		if (err) { return next(err); }
-		res.json(newq);
-	});
-	
-});
+
 
 
 //Delete a question
@@ -285,22 +371,7 @@ router.get('/quiz/question/:quiz', function(req, res, next) {
 });
 
 
-/* POST new question to questionnaire */
-router.post('/questionnaires/:questionnaire/questions', function(req, res, next) {
-	var question = new Question(req.body);
-	question.questionnaire = req.questionnaire;
 
-	question.save(function(err, question) {
-		if (err) { return next(err); }
-
-		req.questionnaire.questions.push(question);
-		req.questionnaire.save(function(err, questionnaire) {
-			if (err) { return next(err); }
-
-			res.json(question);
-		});
-	});
-});
 
 /* POST new solution to a single question*/
 router.post('/solutions/', function(req,res,next) {

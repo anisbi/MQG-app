@@ -1,23 +1,17 @@
-/*
-	Controller for multi choice questions.
-	Includes CRUD - and solving implementation.
-*/
-
 angular.module('qmaker')
 
-//Controller for CRUD of open question type.
-.controller('openQuestionCtrl', [
-'$scope',
-'$location',
-'questionnaire',
-'qstnrs',
+.controller('openQuestionCtrl', function($stateParams, $scope, $location, authentication, mqgAppData) {
 
-function($scope, $location, questionnaire, qstnrs, $upload) {
+$scope.currentUser = authentication.currentUser();
 
 //Template for new question
 $scope.question = {
 	qtype: 'open_question',
 	body: '',
+	author: { 
+		id : $scope.currentUser.id,
+		name : $scope.currentUser.name
+	},
 	data: {},
 	publicdata:
 	{
@@ -31,7 +25,7 @@ $scope.question = {
 	}
 };
 
-$scope.equations = $scope.question.publicdata.equations.equationsArray;
+//$scope.equations = $scope.question.publicdata.equations.equationsArray;
 
 //Adds a graph to the question content
 $scope.addGraph = function() {
@@ -48,31 +42,30 @@ $scope.addGraph = function() {
 //Refreshes the function-plot in preview
 $scope.plotError = false;
 $scope.refreshPreview = function() {
-	
-	for (var i = 0; i <  $scope.equations.length; i++) {
+	var arrLength = $scope.question.publicdata.equations.equationsArray.length;
+	for (var i = 0; i <  arrLength; i++) {
 		try {
-			if ($scope.equations[i].equationType == 'fn') {
-				console.log('refreshPreview2');
+			if ($scope.question.publicdata.equations.equationsArray[i].equationType == 'fn') {
+				console.log('refreshPreview2',$scope.question.publicdata.equations.equationsArray[i]);
+				console.log('refreshPreview Title:',$scope.question.publicdata.equations.equationsArray[i].equationComment);
 				functionPlot({
-					title: $scope.equations[i].equationComment,
 					width: 250,
 					height: 250,
 			  		target: '#plot-' +i,
 			  		data: [{
-			    		fn: $scope.equations[i].equation,
+			    		fn: $scope.question.publicdata.equations.equationsArray[i].equation,
 			    		sampler: 'builtIn',
 			    		graphType: 'polyline'
 			  		}]
 				});
 			}
-			if ($scope.equations[i].equationType == 'im') {
+			if ($scope.question.publicdata.equations.equationsArray[i].equationType == 'im') {
 				functionPlot({
-					title: $scope.equations[i].equationComment,
 					width: 250,
 					height: 250,
 			  		target: '#plot-' +i,
 			  		data: [{
-			    		fn: $scope.equations[i].equation,
+			    		fn: $scope.question.publicdata.equations.equationsArray[i].equation,
 			    		fnType: 'implicit'
 			  		}]
 				});
@@ -82,6 +75,24 @@ $scope.refreshPreview = function() {
 		}
 	}
 }
+
+$scope.deleteGraph = function(index) {
+	console.log("splicing",index);
+	$scope.question.publicdata.equations.equationsArray.splice(index,1);
+	$scope.refreshPreview();
+};
+
+
+$scope.commitQuestion = function() {
+
+	mqgAppData.newQuestion($stateParams.id, $scope.question)
+	  .success(function(response) {
+	  	$location.path('/questionnaires/' + $stateParams.id);
+	  })
+	  .error(function (e) {
+	  	console.log('error',e);
+	  });
+};
 
 //Handles file uploads.
 $scope.uploadFile = function(){
@@ -103,7 +114,98 @@ $scope.uploadFile = function(){
 
     };
 };
+})
+
+.controller('openQuestionEditCtrl', function($timeout, $stateParams, $scope, $location, authentication, mqgAppData) {
+
+//getQuestion
+mqgAppData.getQuestion($stateParams.id)
+.success(function (response) {
+  if (response.result === "success") {
+    $scope.questionData = response.data;
+    loadPageData();
+	  }
+  //console.log('$scope inside', $scope.questionnaires);
+})
+.error(function(e) {
+	  console.log('error',e);
+});
+
+var loadPageData = function() {
+	$scope.question = $scope.questionData;
+	//Adds a graph to the question content
+$scope.addGraph = function() {
+	$scope.question.publicdata.equations.equationsArray.push(
+	 {
+	 	equation: '',
+	 	equationComment: '',
+	 	equationType: 'fn'
+	 }
+	);
+	//$scope.equations = $scope.question.publicdata.equations.equationsArray;
+}
+
+//Refreshes the function-plot in preview
+$scope.plotError = false;
+$scope.refreshPreview = function() {
+	var arrLength = $scope.question.publicdata.equations.equationsArray.length;
+	for (var i = 0; i <  arrLength; i++) {
+		try {
+			if ($scope.question.publicdata.equations.equationsArray[i].equationType == 'fn') {
+				console.log('refreshPreview2',$scope.question.publicdata.equations.equationsArray[i]);
+				console.log('refreshPreview Title:',$scope.question.publicdata.equations.equationsArray[i].equationComment);
+				functionPlot({
+					width: 250,
+					height: 250,
+			  		target: '#plot-' +i,
+			  		data: [{
+			    		fn: $scope.question.publicdata.equations.equationsArray[i].equation,
+			    		sampler: 'builtIn',
+			    		graphType: 'polyline'
+			  		}]
+				});
+			}
+			if ($scope.question.publicdata.equations.equationsArray[i].equationType == 'im') {
+				functionPlot({
+					width: 250,
+					height: 250,
+			  		target: '#plot-' +i,
+			  		data: [{
+			    		fn: $scope.question.publicdata.equations.equationsArray[i].equation,
+			    		fnType: 'implicit'
+			  		}]
+				});
+			}
+		} catch(err) {
+			$scope.plotError = true;
+		}
+	}
+};
 
 
+$scope.deleteGraph = function(index) {
+	console.log("splicing",index);
+	$scope.question.publicdata.equations.equationsArray.splice(index,1);
+	$scope.refreshPreview();
+};
 
-}]);
+
+$scope.commitQuestion = function() {
+
+	mqgAppData.editQuestion($stateParams.id, $scope.question)
+	  .success(function(response) {
+	  	$location.path('/questionnaires/' + $scope.question.questionnaire.id);
+	  })
+	  .error(function (e) {
+	  	console.log('error',e);
+	  });
+};
+
+//Refresh preview on load.
+$timeout(function() {
+			$scope.refreshPreview();
+		}, 230);
+
+};
+
+})

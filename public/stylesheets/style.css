@@ -343,3 +343,8 @@ ul[dnd-list] .dndPlaceholder {
     padding-top: 100px;
     font-size: 23px;
 }
+
+.graph-title {
+	margin-right: 119px;
+    margin-bottom: -24px;
+}

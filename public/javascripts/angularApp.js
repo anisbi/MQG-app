@@ -90,24 +90,14 @@ function($stateProvider, $urlRouterProvider) {
 	 .state('multi_choice', {
 	 	url: '/questionnaires/{id}/new/multi_choice',
 	 	templateUrl: '/views/question_types/multi_choice.html',
-	 	controller: 'MultiChoiceCtrl',
-	 	resolve: {
-	 		questionnaire: ['$stateParams', 'qstnrs', function($stateParams, qstnrs){
-	 			return qstnrs.get($stateParams.id);
-	 		}]
-	 	}
+	 	controller: 'multiChoiceCtrl',
 	 })
 
 	 /* in this state we provide the question id to the url */
 	 .state('edit_multi_choice', {
 	 	url: '/questions/{id}/edit/multi_choice',
 	 	templateUrl: '/views/edit_multi_choice.html',
-	 	controller: 'MultiChoiceEditCtrl',
-	 	resolve: {
-	 		question: ['$stateParams', 'qstnrs', function($stateParams, qstnrs) {
-	 			return qstnrs.getQuestion($stateParams.id);
-	 		}]
-	 	}
+	 	controller: 'multiChoiceEditCtrl',
 	 })
 
 
@@ -115,23 +105,37 @@ function($stateProvider, $urlRouterProvider) {
 	 	url: '/questionnaires/{id}/new/open_question',
 	 	templateUrl: '/views/question_types/open_question.html',
 	 	controller: 'openQuestionCtrl',
-	 	resolve: {
-	 		questionnaire: ['$stateParams', 'qstnrs', function($stateParams, qstnrs){
-	 			return qstnrs.get($stateParams.id);
-	 		}]
-	 	}
+	 })
+
+ 	 .state('edit_open_question', {
+	 	url: '/questions/{id}/edit/open_question',
+	 	templateUrl: '/views/question_types/open_question.html',
+	 	controller: 'openQuestionEditCtrl',
 	 })
 
 	 .state('pair_matching', {
 	 	url: '/questionnaires/{id}/new/pair_matching',
 	 	templateUrl: '/views/question_types/pair_matching.html',
 	 	controller: 'pairMatchingCtrl',
-	 	resolve: {
-	 		questionnaire: ['$stateParams', 'qstnrs', function($stateParams, qstnrs){
-	 			return qstnrs.get($stateParams.id);
-	 		}]
-	 	}
 	 }) 
+
+	 .state('edit_pair_matching', {
+	 	url: '/questions/{id}/edit/pair_matching',
+	 	templateUrl: '/views/question_types/edit_pair_matching.html',
+	 	controller: 'pairMatchingEditCtrl',
+	 })
+
+ 	 .state('card_matching', {
+	 	url: '/questionnaires/{id}/new/card_matching',
+	 	templateUrl: '/views/card_matching.html',
+	 	controller: 'cardMatchingCtrl',
+	 })
+
+	 .state('edit_card_matching', {
+	 	url: '/questions/{id}/edit/card_matching',
+	 	templateUrl: '/views/card_matching.html',
+	 	controller: 'cardMatchingCtrl',
+	 })
 
 	 /* The first page when solving a questionnaire.
 		Quiz id corresponds to questionnaire ID.
@@ -157,13 +161,6 @@ function($stateProvider, $urlRouterProvider) {
 			}]
 		}
 	})
-
-	 .state('mathjax', {
-	 	url: '/mathjax',
-	 	templateUrl: '/views/mathjax_test.html',
-	 	controller: 'mTestCtrl',
-	 })
-
 
 	 .state('register', {
 	 	url: '/register',

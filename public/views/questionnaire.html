@@ -17,6 +17,7 @@
 </div>
 -->
 
+<!--span style="direction: ltr">{{qstnr | json}}</span-->
 <div class="edit-qstnr-container">
 	<div class="row">
 		<div class="col-md-12">
@@ -73,42 +74,28 @@
 				</h5>
 			</a>
 
-			<button class="btn btn-primary btn-sq-md" id="new-question-btn">
-				<span class="glyphicon glyphicon-magnet" id="new-question-glyph"></span>
-				<h5 class="center-block">
-					סוג 2
-				</h5>
-			</button>
-
-			<button class="btn btn-primary btn-sq-md" id="new-question-btn">
-				<span class="glyphicon glyphicon-bullhorn" id="new-question-glyph"></span>
-				<h5 class="center-block">
-					סוג 3
-				</h5>
-			</button>
-
-			<button class="btn btn-primary btn-sq-md" id="new-question-btn">
-				<span class="glyphicon glyphicon-fullscreen" id="new-question-glyph"></span>
-				<h5 class="center-block">
-					סוג 4
-				</h5>
-			</button>
-
-
-			<button class="btn btn-primary btn-sq-md" id="new-question-btn">
+			<a href="#/questionnaires/{{qstnr._id}}/new/pair_matching" class="btn btn-primary btn-sq-md" id="new-question-btn">
 				<span class="glyphicon glyphicon-random" id="new-question-glyph"></span>
 				<h5 class="center-block">
-					סוג 5
+					התאמת זוגות
 				</h5>
-			</button>
+			</a>
+
+			<a href="#/questionnaires/{{qstnr._id}}/new/open_question" class="btn btn-primary btn-sq-md" id="new-question-btn">
+				<span class="glyphicon glyphicon-edit" id="new-question-glyph"></span>
+				<h5 class="center-block">
+					שאלה פתוחה
+				</h5>
+			</a>
 
 
-
+			<a href="#/questionnaires/{{qstnr._id}}/new/open_question" class="btn btn-primary btn-sq-md" id="new-question-btn">
+				<span class="glyphicon glyphicon-th" id="new-question-glyph"></span>
+				<h5 class="center-block">
+					התאמת<br>כרטיסיות
+				</h5>
+			</a>
 		</div>
-
-		
-
-
 	</div>
 
 	<div class="row">
@@ -145,7 +132,7 @@
 							{{question.body}}
 						</td>
 						<td>
-							----
+							{{question.author.name}}
 						</td>
 						<td>
 							<a href="#/questions/{{question._id}}/edit/{{question.qtype}}" class="btn btn-default">

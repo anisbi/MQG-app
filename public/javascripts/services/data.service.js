@@ -48,11 +48,39 @@
       });
     };
 
+
+    var newQuestion = function(questionnaireId, questionData) {
+      return $http.post('/questionnaires/'+questionnaireId+'/questions', questionData, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
+    var getQuestion = function(questionId) {
+      return $http.get('/question/'+questionId, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
+    var editQuestion = function(questionId, questionData) {
+      return $http.put('/question/'+questionId, questionData, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
     return {
   	  getProfile : getProfile,
       getQuestionnaires: getQuestionnaires,
       getQuestionnaire: getQuestionnaire,
+      getQuestion : getQuestion,
       getTest : getTest,
+      newQuestion : newQuestion,
+      editQuestion : editQuestion,
       newQuestionnaire : newQuestionnaire
     };
 

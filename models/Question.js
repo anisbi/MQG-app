@@ -1,12 +1,13 @@
 var mongoose = require('mongoose');
 
 var QuestionSchema = new mongoose.Schema({
+	author: {},
 	qtype: String,
 	body: String,
 	options: [],
 	data: {},
 	publicdata: {},
-	questionnaire: { type: mongoose.Schema.Types.ObjectId, ref: 'Questionnaire' }
+	questionnaire: { }
 });
 
 mongoose.model('Question', QuestionSchema);
