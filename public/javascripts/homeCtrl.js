@@ -2,7 +2,12 @@ angular.module('qmaker')
 
 .controller('homeCtrl', function($scope, $location, authentication, mqgAppData) {
 
+if (!authentication.isLoggedIn()) {
+	$location.path('/login');
+  	return;
+}
 
+else {
   mqgAppData.getQuestionnaires()
   .success(function (response) {
      $scope.questionnaires = response.data;
@@ -86,6 +91,7 @@ angular.module('qmaker')
 			$scope.formView = false;
 			$scope.qstnrsView = true;
 		};
+ 	}
  }
 
 

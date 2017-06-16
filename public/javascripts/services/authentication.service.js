@@ -55,6 +55,7 @@
       console.log('in register', user);
       return $http.post('/register',user).success(function(data) {
         if (data.result === "success") {
+          console.log('register return data: ',data);
       	  saveToken(data.token);
         }
         else if (data.result === "failure") {

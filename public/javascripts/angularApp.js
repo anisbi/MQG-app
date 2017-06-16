@@ -12,17 +12,35 @@ var app = angular.module('qmaker',
 
 
 app.run(
-  function($rootScope, $location, authentication) {
-  	console.log('in run');
+  function($rootScope, $location, $state, authentication) {
   	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       //console.log("from state: ",fromState);
       //console.log("to state: ",toState);
       //console.log("location path",$location.path());
       if ($location.path() === '/profile' && !authentication.isLoggedIn()) {
+        event.preventDefault();
         $location.path('/login');
+        $state.go('login');
       }
       else if ($location.path() === '/login' && authentication.isLoggedIn()) {
+        event.preventDefault();
         $location.path('/profile');
+        $state.go('profile');
+      }
+      else if ($location.path() === '/register' && authentication.isLoggedIn()) {
+        event.preventDefault();
+        $location.path('/profile');
+        $state.go('profile');
+      }
+      else if ($location.path() === '/logout' && !authentication.isLoggedIn()) {
+        event.preventDefault();
+        $location.path('/login');
+        $state.go('login');
+      }
+      else if ($location.path() === '/home' && !authentication.isLoggedIn()) {
+        event.preventDefault();
+        $location.path('/login');
+        $state.go('login');
       }
     });
   }
@@ -162,6 +180,12 @@ function($stateProvider, $urlRouterProvider) {
 		}
 	})
 
+	 .state('registerTeacher', {
+	 	url: '/register/teacher',
+	 	templateUrl: '/views/register.html',
+	 	controller: 'registerCtrl',
+	 })
+
 	 .state('register', {
 	 	url: '/register',
 	 	templateUrl: '/views/register.html',
@@ -178,6 +202,12 @@ function($stateProvider, $urlRouterProvider) {
 	 	url: '/profile',
 	 	templateUrl: '/views/profile.html',
 	 	controller: 'profileCtrl',
+	 })
+
+	.state('logout', {
+	 	url: '/logout',
+	 	templateUrl: '/views/login.html',
+	 	controller: 'logoutCtrl',
 	 })
 
 	 //$urlRouterProvider.otherwise('home');

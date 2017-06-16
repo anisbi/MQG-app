@@ -93,7 +93,8 @@ module.exports.verifyUser = function(req, res, next) {
 	  	   }
 	  	   else {
 	  	   	//User with valid ID.
-	  	     next();
+	  	   	req.user = user;
+	  	    next();
 	  	   }
 	
 	  });
@@ -101,7 +102,7 @@ module.exports.verifyUser = function(req, res, next) {
 };
 
 module.exports.test2 = function(req, res) {
-  res.status(200).json({"in next" : req.payload});
+  res.status(200).json({"in next" : req.user});
 };
 
 router.get('/test', auth, this.verifyUser, this.test2);
@@ -109,23 +110,31 @@ router.get('/test', auth, this.verifyUser, this.test2);
 
 module.exports.getQuestionnaires = function(req, res) {
 
+  if (req.user.type !== "teacher") {
+    res.status(401).json({
+      "result" : "failure",
+      "message" : "Unauthorized Access."
+	 });
+  }
 
-  Questionnaire.find({
-  	"author.id" : req.payload._id
-  }).exec(function (err, questionnaires) {
-  	if (err) {
-  		res.status(500).json({
-  	  	    "result" : "failure",
-	  	    "message" : err
-	    });
-  	}
-  	else {
-	  res.status(200).json({
-    	"result" : "success",
-    	"data" : questionnaires
+  else if (req.user.type === "teacher") {
+	  Questionnaire.find({
+	  	"author.id" : req.payload._id
+	  }).exec(function (err, questionnaires) {
+	  	if (err) {
+	  		res.status(500).json({
+	  	  	    "result" : "failure",
+		  	    "message" : err
+		    });
+	  	}
+	  	else {
+		  res.status(200).json({
+	    	"result" : "success",
+	    	"data" : questionnaires
+		  });
+	  	}
 	  });
-  	}
-  });
+ }
 
 
 };
@@ -183,7 +192,7 @@ module.exports.verifyQuestionnaire = function(req, res) {
 		}
 
 		res.status(200).json({
-			"result" : "successful",
+			"result" : "success",
 			"data" : questionnaire
 		});
 	});
@@ -489,53 +498,252 @@ router.param('solution', function(req, res, next, id) {
 
 });
 
+var verifyReferrer = function(referrer) {
+	User.find({
+	  	"email" : referrer,
+	  	"type" : "teacher"
+	  }).exec(function (err, user) {
+	  	if (err) {
+	  		return {"result" : "error", "data": err};
+	  	}
+		if (user.length === 0) {
+			return {
+				"result" : "failure",
+				"message" : "Referrer not found"
+			};
+		}
+		else {
+			return {"result" : "error", "data": user};
+		}
+	  });
+	return {"reached" : "end"};
+}
 
+verifyRegistration = function(req, res, next) {
+		if (req.body.type === "student") {
+			User.find({
+			  	"email" : req.body.data.referrer,
+			  	"type" : "teacher"
+			  }).exec(function (err, user) {
+			  	if (err) {
+			  		req.status = {"result" : "error", "message" : err};
+			  		next();
+			  	}
+				if (user.length === 0) {
+					req.status = {
+						"result" : "failure",
+						"message" : "Referrer not found"
+					};
+					next();
+				}
+				else {
+					req.status = {
+						"result" : "success",
+						"message" : "user in referrer field",
+						"referrer" : user
+					}
+					next();
+				}
+			  });
+		}
+		else if (req.body.type === "teacher") {
+			if (req.body.regiserCode !== "mqg123") {
+				req.status = {
+					"result" : "failure",
+					"message" : "Invalid registration code"
+				};
+				next();
+			}
+			else {
+				req.status = {
+					"result" : "success",
+					"message" : "Valid code."
+				};
+				next();
+			}
+		}
+}
 
 register = function(req, res) {
-	/**
-		TODO: Input checks.
+	if (req.status.result === "success") {
+
+		if (req.body.name.length === 0 || 
+			req.body.email.length === 0 || 
+			req.body.password.length === 0) {
+		
+			res.json({
+				"result" : "failure",
+				"message" : "Please fill all fields"
+			});
+			
+		}
+		else { //All fields set, begin registration
+			
+			var user = new User();
+			user.name = req.body.name;
+			user.email = req.body.email;
+			user.password = req.body.password;
+			user.type = req.body.type;
+
+			if (req.body.type === "student") {
+				user.data = {
+					"referrer" : {
+						"email" : req.status.referrer[0].email,
+						"id" : req.status.referrer[0].id
+					}
+				};
+			}
+			else {
+				user.data = {};
+			}
+			
+
+			user.setPassword(req.body.password);
+
+			user.save(function(err) {
+				if (err) {
+					if (err.code === 11000) {
+					  res.status(200).json({
+					    "result" : "failure",
+					    "message": "User exists with given email address.",
+					    "errcode": err.code
+					  });
+					  return;
+					}
+					else {
+						res.status(500).json({
+							"result" : "failure",
+							"error" : err
+						});
+						return;
+					}
+				}
+				else {
+					var token;
+					token = user.generateJwt();
+					res.status(200);
+					res.json({
+						"result": "success",
+						"token": token
+					});
+				}
+			}); //End of 'user.save'
+		} //End of 'Else' for 'all fields set'
+	} //End of result == success
+
+	else if (req.status.result === "failure") {
+		res.status(404).json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+
+
+	/*
+	if (req.body.type === "student") {
+		if (req.status.result === "error") {
+			res.status(500).json({
+				"result" : "error",
+				"message" : req.status.message
+			});
+		}
+		else if (req.status.result === "failure") {
+			res.status(404).json({
+				"result" : "failure",
+				"message" : req.status.message
+			});
+		}
+		else if (req.status.result === "success") {
+
+		}
+	}
+	else if (req.body.type === "teacher") {
+
+	}
 	*/
+};
+
+//Handles registration for bot student and teacher.
+register2 = function(req, res) {
+/*
+	//in case student registers, check that referrer exists 
+	if (req.body.type === "student") {
+	  User.find({
+	  	"email" : req.body.data.referrer,
+	  	"type" : "teacher"
+	  }).exec(function (err, user) {
+	  	if (err) {
+	  		return res.json({
+	  	  	    "result" : "failure",
+		  	    "message" : err
+		    });
+	  	}
+		return res.json({
+  	  	    "result" : "user apparently found",
+	  	    "message" : user
+	    });
+
+	  });
+	}
+
+	if (req.body.name.length === 0 || req.body.email.length === 0 || req.body.password.length === 0) {
+		
+		return res.json({
+			"result" : "failure",
+			"message" : "Please fill all fields"
+		});
+		
+	}
+
 	var user = new User();
 	
 	user.name = req.body.name;
 	user.email = req.body.email;
 	user.password = req.body.password;
+	user.type = req.body.type;
 
-	if (user.name.length === 0 || user.email.length === 0 || user.password.length === 0) {
+	if (req.body.type === "teacher") {
+		user.data = req.body.data;
+	}
+	
+	user.setPassword(req.body.password);
+
+	user.save(function(err) {
+		if (err) {
+			if (err.code === 11000) {
+			  res.status(200).json({
+			    "result" : "failure",
+			    "message": "User exists with given email address.",
+			    "errcode": err.code
+			  });
+			  return;
+			}
+			else {
+				res.status(500).json({
+					"result" : "failure",
+					"error" : err
+				});
+				return;
+			}
+		}
+		var token;
+		token = user.generateJwt();
 		res.status(200);
 		res.json({
-			"result" : "failure",
-			"message" : "Please fill all fields"
+			"result": "success",
+			"token": token
 		});
-		return;
-	}
-
-	else {
-		user.setPassword(req.body.password);
-
-		user.save(function(err) {
-			if (err) {
-				if (err.code === 11000) {
-				  res.status(200).json({
-				    "result" : "failure",
-				    "message": "User exists with given email address.",
-				    "errcode": err.code
-				  });
-				  return;
-				}
-			}
-			var token;
-			token = user.generateJwt();
-			res.status(200);
-			res.json({
-				"result": "successful",
-				"token": token
-			});
-		});
-	}
+	});
+*/
 };
 
-router.post('/register', register);
+router.post('/register', verifyRegistration, register);
 
 login = function(req, res) {
 

@@ -11,5 +11,13 @@
     <label for="password">Password</label>
     <input type="password" class="form-control" id="password" placeholder="Password" ng-model="password" required>
   </div>
-  <button type="submit" class="btn btn-default">Sign in!</button>
+  <div ng-show="viewReferrerField" class="form-group">
+    <label for="referrer">Referrer</label>
+    <input type="text" class="form-control" id="referrer" placeholder="Referrer" ng-model="referrer">
+  </div>
+  <div ng-show="viewRegisterCodeField" class="form-group">
+    <label for="registerCode">Referrer</label>
+    <input type="text" class="form-control" id="registerCode" placeholder="Registration code" ng-model="registerCode">
+  </div>
+  <button type="submit" class="btn btn-default">Register</button>
 </form>
