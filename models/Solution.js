@@ -2,9 +2,9 @@ var mongoose = require('mongoose');
 
 var SolutionSchema = new mongoose.Schema({
 	qtype: String,
-	solver: String, 
+	solver: {}, 
 	data: {},
-	question: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' }
+	question: String,
 });
 
 mongoose.model('Solution', SolutionSchema);

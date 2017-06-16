@@ -73,6 +73,22 @@
       });
     };
 
+    var getQuizzes = function() {
+      return $http.get('/quiz', {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
+    var getQuizQuestion = function(qtype, qid) {
+      return $http.get('/quiz/'+qid+'/'+qtype, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
     return {
   	  getProfile : getProfile,
       getQuestionnaires: getQuestionnaires,
@@ -81,7 +97,9 @@
       getTest : getTest,
       newQuestion : newQuestion,
       editQuestion : editQuestion,
-      newQuestionnaire : newQuestionnaire
+      newQuestionnaire : newQuestionnaire,
+      getQuizzes : getQuizzes,
+      getQuizQuestion : getQuizQuestion
     };
 
   }

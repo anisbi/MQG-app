@@ -155,30 +155,28 @@ function($stateProvider, $urlRouterProvider) {
 	 	controller: 'cardMatchingCtrl',
 	 })
 
-	 /* The first page when solving a questionnaire.
-		Quiz id corresponds to questionnaire ID.
-	  */
-	 .state('quiz', {
-	 	url: '/quiz/{id}',
+	 //Get available questionnaires for student to solve.
+	 .state('quizzes', {
+	 	url: '/quiz',
 	 	templateUrl: '/views/quiz.html',
 	 	controller: 'quizCtrl',
-	 	resolve: {
-	 		quiz: ['$stateParams', 'qstnrs', function($stateParams, qstnrs) {
-	 			return qstnrs.getQuiz($stateParams.id);
-	 		}]
-	 	}
 	 })
 
-	.state('quizQuestion_multi_choice', {
-		url: '/quiz/question/{id}/multi_choice',
-		templateUrl: '/views/quizquestion_multi_choice.html',
-		controller: 'MultiChoiceQuizQuestionCtrl',
-		resolve: {
-			question: ['$stateParams', 'qstnrs', function($stateParams, qstnrs) {
-				return qstnrs.getQuizQuestion($stateParams.id);
-			}]
-		}
-	})
+	 //Display available questions in questionnaire
+	 .state('quiz_questions', {
+	 	url: '/quiz/{id}',
+	 	templateUrl: '/views/quiz_questions.html',
+	 	controller: 'quizCtrl'
+	 })
+
+	 //Display available questions in questionnaire
+	 .state('quiz_solve_pair_matching', {
+	 	url: '/quiz/{questionnaire_id}/{question_id}/pair_matching',
+	 	templateUrl: '/views/solve_pair_matching.html',
+	 	controller: 'solvePairMatchingCtrl'
+	 })
+
+	
 
 	 .state('registerTeacher', {
 	 	url: '/register/teacher',

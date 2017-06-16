@@ -1,4 +1,4 @@
-<div style="direction: ltr">{{quizzes | json}}</div>
+<div style="direction: ltr">{{questionnaire | json}}</div>
 
 
 
@@ -11,13 +11,10 @@
 						#
 					</th>
 					<th class="text-right">
-						שם שאלון
+						סוג שאלה
 					</th>
 					<th class="text-right">
 						נכתב ע״י
-					</th>
-					<th class="text-right">
-						מס׳ שאלות
 					</th>
 					<th class="text-left">
 						פעולה
@@ -25,21 +22,18 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="quiz in quizzes track by $index">
+				<tr ng-repeat="question in questionnaire.questions track by $index">
 					<td>
 						{{$index+1}}
 					</td>
 					<td>
-						{{quiz.title}}
+						{{question.qtype}}
 					</td>
 					<td>
-						{{quiz.author.name}}
+						{{question.author.name}}
 					</td>
 					<td>
-						{{quiz.questions.length}}
-					</td>
-					<td>
-						<a href="#/quiz/{{quiz._id}}" class="btn btn-default pull-left text-left">
+						<a href="#/quiz/{{questionnaire._id}}/{{question._id}}/{{question.qtype}}" class="btn btn-default pull-left text-left">
 							פתור
 						</a>
 					</td>

@@ -23,7 +23,6 @@ router.get('/', function(req, res, next) {
 });
 
 
-
 module.exports.profileRead = function(req, res) {
 	if (!req.payload._id) {
 		res.status(401).json({
@@ -74,9 +73,13 @@ module.exports.verifyUser = function(req, res, next) {
   //next();
 
   	if (!req.payload._id) {
+  		req.status = {
+  			"result" : "failure",
+  			"message" : "Unauthorized access."
+  		}; 
 		res.status(401).json({
 			"result" : "failure",
-			"message" : "UnauthorizedError: private profile"
+			"message" : "UnauthorizedError"
 		});
 	}
 	else {
@@ -93,6 +96,10 @@ module.exports.verifyUser = function(req, res, next) {
 	  	   }
 	  	   else {
 	  	   	//User with valid ID.
+	  	   	req.status = {
+	  	   		"result" : "success",
+	  	   		"user" : "user data in user field"
+	  	   	}
 	  	   	req.user = user;
 	  	    next();
 	  	   }
@@ -150,10 +157,12 @@ module.exports.newQuestionnaire = function(req, res) {
 	    });
 	    return;
   	}
-  	res.status(200).json({
-  	  "result" : "success",
-  	  "data" : questionnaire
-  	});
+  	else {
+	  	res.status(200).json({
+	  	  "result" : "success",
+	  	  "data" : questionnaire
+	  	});
+  	}
   });
   
 };
@@ -181,7 +190,9 @@ router.get('/questionnaires', function(req, res, next) {
 */
 
 module.exports.verifyQuestionnaire = function(req, res) {
-  if (req.questionnaire.author.id === req.payload._id) {
+  if (req.status.result === "success" && 
+  		req.questionnaire.author.id === req.payload._id) {
+  	
   	req.questionnaire.populate('questions', function (err, questionnaire) {
 		if (err) { 
 			res.status(500).json({
@@ -190,11 +201,12 @@ module.exports.verifyQuestionnaire = function(req, res) {
 	   		});
 	   		return;
 		}
-
-		res.status(200).json({
-			"result" : "success",
-			"data" : questionnaire
-		});
+		else {
+			res.status(200).json({
+				"result" : "success",
+				"data" : questionnaire
+			});
+		}
 	});
   }
   else {
@@ -208,38 +220,56 @@ router.get('/questionnaires/:questionnaire', auth, this.verifyUser, this.verifyQ
 
 
 module.exports.saveQuestion = function(req, res) {
-  var question = new Question(req.body);
-  question.questionnaire = { "id" : req.questionnaire._id };
-  question.save(function(err, question) {
-  	if (err) { 
-  		res.status(500).json({
-  	  	    "result" : "failure",
-	  	    "message" : err
-	    });
-	    return;
-  	}
-
-  	req.questionnaire.questions.push(question);
-		req.questionnaire.save(function(err, questionnaire) {
-		if (err) { 
-			res.status(500).json({
-  	  	      "result" : "failure",
-  	  	      "message" : err
-  		  	}); 
-			return;
-  		}
-	    res.status(200).json({
-  	  	  "result" : "success",
-  	  	  "data" : question
-  		}); 
+  if (req.status.result === "success") {
+	  var question = new Question(req.body);
+	  question.questionnaire = { "id" : req.questionnaire._id };
+	  question.save(function(err, question) {
+	  	if (err) { 
+	  		res.status(500).json({
+	  	  	    "result" : "failure",
+		  	    "message" : err
+		    });
+		    return;
+	  	}
+	  	else {
+		  	req.questionnaire.questions.push(question);
+				req.questionnaire.save(function(err, questionnaire) {
+				if (err) { 
+					res.status(500).json({
+		  	  	      "result" : "failure",
+		  	  	      "message" : err
+		  		  	}); 
+					return;
+		  		}
+		  		else {
+				    res.status(200).json({
+			  	  	  "result" : "success",
+			  	  	  "data" : question
+			  		}); 
+				}
+			});
+		}
 	});
-	
-  });
+  }
+  else if (req.status.result === "failure") {
+		res.status(404).json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+  }
+  else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
 };
 router.post('/questionnaires/:questionnaire/questions', auth, this.verifyUser, this.saveQuestion);
 
 module.exports.getQuestion = function(req, res) {
-  if (req.question.author.id === req.payload._id) {
+  if (req.status.result === "success" &&
+  		req.question.author.id === req.payload._id) {
+
   	res.status(200).json({
   		"result" : "success",
   		"data" : req.question
@@ -255,7 +285,9 @@ module.exports.getQuestion = function(req, res) {
 router.get('/question/:question', auth, this.verifyUser, this.getQuestion);
 
 module.exports.editQuestion = function(req, res) {
-  if (req.question.author.id === req.payload._id) {
+  if (req.status.result === "success" &&
+  		req.question.author.id === req.payload._id) {
+
   	req.question.body = req.body.body;
   	req.question.options = req.body.options;
   	req.question.data = req.body.data;
@@ -277,7 +309,234 @@ module.exports.editQuestion = function(req, res) {
 };
 router.put('/question/:question', auth, this.verifyUser, this.editQuestion);
 
+/*
+	For the requesting user, we retrieve all available questionnaires, we also
+	populate the 'Questions' field for each questionnaire.
+*/
+module.exports.getQuizzes = function(req, res, next) {
+  if (req.status.result === "success") {
+	var query = Questionnaire
+					.find({
+						"author.id" : req.user.data.referrer.id
+					}).populate('questions', '-data');
 
+	query.exec(function (err, questionnaires) {
+		if (err) {
+			res.status(500).json({
+				"result" : "error",
+				"message" : err
+			});
+		}
+		else {
+			res.json({
+				"result" : "success",
+				"message" : "Questionnaires in data field",
+				"data" : questionnaires
+			});
+		}
+		
+	});
+  }
+  else if (req.status.result === "failure") {
+		res.status(404).json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+
+};
+
+/*
+	After retrieving all questionnaires for the requesting user, we check which of the 
+	questions in the questionnaires have already been answered by the user, and which
+	haven't.
+
+	!!!!!!NOT IN USE!!!!!!!!
+*/
+module.exports.getQuestionsAnswered = function(req, res, next) {
+  if (req.status.result === "success") {
+  	var question;
+  	var finishedExec = false;
+	for (var i = 0; i < req.status.data.length; i++) {
+		for (var j=0; j < req.status.data[i].questions.length; j++) {
+			question = req.status.data[i].questions[j].toJSON();
+			
+			var query = Solution.
+							find({"solver.id" : req.user._id,
+				   	    		  "question" : question._id});
+			query.exec(function(err, solutions){
+				if (err) {
+					question["isAnswered"] = false;
+				}
+				else {
+					question["isAnswered"] = (solutions.length > 0);
+				}
+			});	
+			req.status.data[i].questions[j] = question;
+			finishedExec = ((i === req.status.data.length -1) && 
+							(j === req.status.data[i].questions.length -1));
+		}
+
+	}
+	while(!finishedExec);
+	next();
+  }
+  else { next(); }
+};
+
+module.exports.returnQuiz = function(req,res) {
+	if (req.status.result === "success") {
+		res.json(
+	  	{
+		  "result" : "success",
+		  "message" : "Questionnaires in data field",
+		  "data" : {"q" : req.status.data, "to" : typeof(question)},
+		});
+	}
+	else if (req.status.result === "failure") {
+		res.status(404).json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+};
+
+router.get('/quiz', auth, this.verifyUser, this.getQuizzes);
+
+
+
+/*
+	In charge of checking eligibility of a student to solve a question.
+*/
+module.exports.verifyQuestion = function(req,res,next) {
+
+	if (req.status.result === "success") {
+		if (req.user.data.referrer.id !== req.question.author.id) {
+			req.status = {
+				"result" : "failure",
+				"message" : "Unauthorized Access"
+			};
+		}
+		else {
+			//Check if answered before
+			var query = Solution.
+							find({"solver.id" : req.user._id,
+				   	    		  "question" : req.question._id});
+			query.exec(function(err, solutions){
+				if (err) {
+					req.status = {
+						"result" : "error",
+						"message" : err
+					};
+					next();
+				}
+				else {
+					if (solutions.length < 1) {
+						req.status = {
+							"result" : "failure",
+							"message" : "User already answered this question"
+						};
+						next();
+					}
+				}
+			});	
+
+
+			req.status = {
+				"result" : "success",
+				"message" : "User authorized"
+			};
+		}
+	}
+	next();
+};
+/*
+	Shuffles a given array. When a teacher writes a question, the positions
+	of objects in arrays indicate the right answer. We shuffle these arrays when 
+	returning the question for a quiz for a student to answer.
+	(taken from: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array)
+*/
+
+var shuffleArray = function(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  var arrayCopy = array.slice();
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = arrayCopy[currentIndex];
+    arrayCopy[currentIndex] = arrayCopy[randomIndex];
+    arrayCopy[randomIndex] = temporaryValue;
+  }
+  return arrayCopy;
+};
+module.exports.returnQuizQuestion = function(req, res) {
+	if (req.status.result === "success") {
+		if (req.params.qtype === "pair_matching") {
+			/*
+				For pair matching we need to shuffle the arrays containing
+				the 'cards' in the right order.
+				Return to user following values: 
+				{id, shuffledLists{A[],B[]}, publicdata, author, questionnaire}
+			*/
+			//this.shuffle(req.question.data.lists.A);
+			var shuffledA = shuffleArray(req.question.data.lists.A);
+			var shuffledB = shuffleArray(req.question.data.lists.B);
+			var quizQuestionObj = {
+				"id" : req.question._id,
+				"author" : {
+					"id" : req.question.author.id,
+					"name" : req.question.name
+				},
+				"lists" : {
+					"A" : shuffledA,
+					"B" : shuffledB
+				},
+				"questionnaire" : req.question.questionnaire.id
+			};
+			res.json({"received" : quizQuestionObj});
+		}
+		else {
+			res.status(404).json({
+				"result" : "failure",
+				"message" : "Unrecognized question type"
+			});
+		}
+	}
+	else if (req.status.result === "failure") {
+		res.status(404).json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+};
+
+
+
+
+router.get('/quiz/:question/:qtype', auth, this.verifyUser, this.verifyQuestion, this.returnQuizQuestion);
 
 
 /* POST new question to questionnaire 
@@ -329,19 +588,7 @@ router.get('/solutions', function(req, res, next) {
 
 
 
-/* GET questionnaire with associated questions. (w/o answer)*/
-router.get('/quiz/:questionnaire', function(req, res, next) {
-	/*
-		Same as the request above, except we don't populate the 
-		questions with the answers. 
-	*/
-	req.questionnaire.populate('questions', 'qtype body options publicdata', function(err, questionnaire) {
-			if (err) { return next(err); }
 
-			res.json(questionnaire);
-		});
-	//res.json(req.questionnaire);
-});
 
 
 
@@ -468,19 +715,29 @@ router.param('question', function(req, res, next, id) {
 
 /*  Define ':quiz' in URL.
 	A quiz is a question document without the solution (private data field)
-*/
-router.param('quiz', function(req, res, next, id) {
+
+router.param('quiz_question', function(req, res, next, id) {
 	var query = Question
 				.findById(id)
 				.select('qtype body options publicdata questionnaire');
-	query.exec(function (err, quiz) {
+	query.exec(function (err, quiz_question) {
 		if (err) { return next(err); }
-		req.quiz = quiz;
-		return next();
+		req.quiz_question = quiz_question;
+		next();
 	});
-
 });
 
+router.param('quiz_questionnaire', function(req, res, next, id) {
+	var query = Questionnaire
+				.find()
+				.select('qtype body options publicdata questionnaire');
+	query.exec(function (err, quiz_questionnaire) {
+		if (err) { return next(err); }
+		req.quiz_questionnaire = quiz_questionnaire;
+		next();
+	});
+});
+*/
 /* define ':solution' in URL */
 router.param('solution', function(req, res, next, id) {
 	var query = Solution.findById(id);
