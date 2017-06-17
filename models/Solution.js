@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 
 var SolutionSchema = new mongoose.Schema({
-	qtype: String,
-	solver: {}, 
+	solver: {},
+  question: {},
 	data: {},
-	question: String,
+  createdon: { type: Date, default: Date.now },
 });
 
 mongoose.model('Solution', SolutionSchema);

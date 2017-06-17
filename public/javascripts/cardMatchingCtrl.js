@@ -19,6 +19,7 @@ else {
 	$scope.list1 = "רשימה 1";
 	$scope.list2 = "רשימה 2";
 	$scope.list3 = "רשימה 3";
+	$scope.qbody = "";
 
 	$scope.question = {
 		qtype: 'card_matching',
@@ -36,9 +37,11 @@ else {
 		},
 		publicdata:
 		{
+
 			list1: $scope.list1,
 			list2: $scope.list2,
-			list3: $scope.list3
+			list3: $scope.list3,
+			qbody: $scope.qbody
 		}
 	};
 
@@ -68,6 +71,7 @@ var loadViewData = function() {
 	$scope.list1 = $scope.question.publicdata.list1;
 	$scope.list2 = $scope.question.publicdata.list2;
 	$scope.list3 = $scope.question.publicdata.list3;
+	$scope.qbody = $scope.question.publicdata.qbody;
 };
 
 
@@ -299,6 +303,7 @@ $scope.commitQuestion = function() {
 	$scope.question.publicdata.list1 = $scope.list1;
 	$scope.question.publicdata.list2 = $scope.list2;
 	$scope.question.publicdata.list3 = $scope.list3;
+	$scope.question.publicdata.qbody = $scope.qbody;
 	//If editing an existing question
 	if ($state.current.name === "edit_card_matching") { 
 		mqgAppData.editQuestion($stateParams.id, $scope.question)

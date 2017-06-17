@@ -23,6 +23,7 @@ var users = require('./routes/users');
 var app = express();
 
 app.use('/ng-file-upload', express.static(__dirname + '/node_modules/ng-file-upload/dist/'));
+app.use('/sweetalert2', express.static(__dirname + '/node_modules/sweetalert2/dist/'));
 app.use('/cloudinary', express.static(__dirname + '/node_modules/cloudinary/'));
 app.use('/angular-file-upload', express.static(__dirname + '/node_modules/angular-file-upload/dist/'));
 app.use('/angular-drag-and-drop-lists', express.static(__dirname + '/node_modules/angular-drag-and-drop-lists/'));
@@ -40,6 +41,11 @@ cloudinary.config({
 //db connect
 mongoose.connect('mongodb://localhost:27017/qmaker2');
 //mongoose.connect('mongodb://mradmin:QSAd32$a{x@ds149479.mlab.com:49479/mqg-app')
+
+mongoose.connection.on('error', function(err) {
+    console.log('MongoDB error: %s', err);
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

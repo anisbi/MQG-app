@@ -89,6 +89,10 @@ select {
 	font-size: 67px;
 }
 
+#action-button-glyph {
+	font-size: 37px;
+}
+
 .home-button-container {
 	padding-bottom: 23px;
 }
@@ -111,6 +115,11 @@ select {
   width: 100px;
   height: 100px;
   border-radius: 0px;
+}
+
+.btn-sq-action {
+	width: 88px;
+	height: 67px;
 }
 
 #new-question-glyph {

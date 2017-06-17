@@ -169,14 +169,17 @@ function($stateProvider, $urlRouterProvider) {
 	 	controller: 'quizCtrl'
 	 })
 
-	 //Display available questions in questionnaire
 	 .state('quiz_solve_pair_matching', {
 	 	url: '/quiz/{questionnaire_id}/{question_id}/pair_matching',
 	 	templateUrl: '/views/solve_pair_matching.html',
 	 	controller: 'solvePairMatchingCtrl'
 	 })
 
-	
+	 .state('quiz_solve_card_matching', {
+	 	url: '/quiz/{questionnaire_id}/{question_id}/card_matching',
+	 	templateUrl: '/views/solve_card_matching.html',
+	 	controller: 'solveCardMatchingCtrl'
+	 })	
 
 	 .state('registerTeacher', {
 	 	url: '/register/teacher',

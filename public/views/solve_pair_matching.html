@@ -1,1 +1,60 @@
-<div style="direction:ltr">{{data|json}}</div>
+<!--div style="direction:ltr">{{data|json}}</div>
+<div style="direction:ltr">{{models|json}}</div><hr-->
+
+<div class="container">
+  <div class="row" style="margin-bottom:15px;">
+    <div class="col-md-6">
+		<a href="#/quiz/{{data.questionnaire}}" class="btn btn-primary btn-sq-action pull-left">
+			<span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+			<h5 style="margin-top: 3px;">Back</h5>
+		</a>
+    </div>
+    <div class="col-md-6">
+		<button class="btn btn-success btn-sq-action pull-right" ng-click="confirmSend()">
+			<span class="glyphicon glyphicon-ok" id="action-button-glyph"></span>
+			<h5 style="margin-top: 3px;">Send</h5>
+		</button>
+    </div>
+  </div>
+
+  <div class="row">
+  	<div class="col-xs-12">
+  		התאם את כרטיסיות בזוגות
+  	</div>
+  </div>
+
+  <div class="row">
+	<div class="col-md-6 col-xs-6">
+		<div class="panel-heading list-panel-heading">
+			List A
+		</div>
+		<div class="panel-body">
+			<ul dnd-list="models.lists.A" style="min-height: 111px;">
+				<li ng-repeat="item in models.lists.A"
+			        dnd-draggable="item"
+			        dnd-moved="models.lists.A.splice($index, 1)"
+			        dnd-effect-allowed="move" 
+			        class="center-block text-center">
+				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-A-{{$index}}" style="height: 250px; width:250px;"></div>
+	    		</li>
+			</ul>
+		</div>
+	</div>	
+	<div class="col-md-6 col-xs-6">
+		<div class="panel-heading">List B</div>
+		<div class="panel-body">
+			<ul dnd-list="models.lists.B" style="min-height: 111px;">
+				<li ng-repeat="item in models.lists.B"
+			        dnd-draggable="item"
+			        dnd-moved="models.lists.B.splice($index, 1)"
+			        dnd-effect-allowed="move" 
+			        class="center-block text-center">
+				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-B-{{$index}}" style="height: 250px; width:250px;"></div>
+	    		</li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</div>

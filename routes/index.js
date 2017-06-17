@@ -431,10 +431,11 @@ module.exports.verifyQuestion = function(req,res,next) {
 		}
 		else {
 			//Check if answered before
-			var query = Solution.
-							find({"solver.id" : req.user._id,
-				   	    		  "question" : req.question._id});
-			query.exec(function(err, solutions){
+			var query = Solution.find({"qtype" : "multi_choice"});
+
+			req.solutions = "ZXCXZXCZXZ";
+			query.exec(function (err, solutions){
+				req.solutions = "test2";
 				if (err) {
 					req.status = {
 						"result" : "error",
@@ -443,7 +444,8 @@ module.exports.verifyQuestion = function(req,res,next) {
 					next();
 				}
 				else {
-					if (solutions.length < 1) {
+					if (solutions.length === 1) {
+						
 						req.status = {
 							"result" : "failure",
 							"message" : "User already answered this question"
@@ -471,7 +473,7 @@ module.exports.verifyQuestion = function(req,res,next) {
 
 var shuffleArray = function(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
-  var arrayCopy = array.slice();
+  var arrayCopy = array.slice(); //Copy array by value
   // While there remain elements to shuffle...
   while (0 !== currentIndex) {
 
@@ -510,8 +512,55 @@ module.exports.returnQuizQuestion = function(req, res) {
 				},
 				"questionnaire" : req.question.questionnaire.id
 			};
-			res.json({"received" : quizQuestionObj});
+			res.json({
+				"result" : "success",
+				"message" : "Quiz data in 'data' field",
+				"data" : quizQuestionObj
+			});
 		}
+
+
+		/*
+			For card matching, we would also like to shuffle the arrays before returning
+			data to user.
+			Output: {id, data{shuffledLists{A[],B[],C[]}, allowedTypes}, publicdata, author, questionnaire}
+		*/
+		else if (req.params.qtype === "card_matching") {
+			var shuffledA = shuffleArray(req.question.data.lists.listA);
+			var shuffledB = shuffleArray(req.question.data.lists.listB);
+			var shuffledC = shuffleArray(req.question.data.lists.listC);
+			var quizQuestionObj = {
+				"id" : req.question._id,
+				"author" : {
+					"id" : req.question.author.id,
+					"name" : req.question.name
+				},
+				"data" : {
+					"lists" : {
+						"A" : shuffledA,
+						"B" : shuffledB,
+						"C" : shuffledC
+					},
+					"allowedTypes" : req.question.data.allowedTypes,
+					"qbody" : req.question.publicdata.qbody,
+					"listNameA" : req.question.publicdata.list1,
+					"listNameB" : req.question.publicdata.list2,
+					"listNameC" : req.question.publicdata.list3
+				},
+				"questionnaire" : req.question.questionnaire.id,
+				"solutions" : req.solutions
+			};
+
+
+
+			res.json({
+				"result" : "success",
+				"message" : "Quiz data in 'data' field",
+				"data" : quizQuestionObj
+			});
+
+		}
+
 		else {
 			res.status(404).json({
 				"result" : "failure",
@@ -533,10 +582,98 @@ module.exports.returnQuizQuestion = function(req, res) {
 	}
 };
 
-
-
-
 router.get('/quiz/:question/:qtype', auth, this.verifyUser, this.verifyQuestion, this.returnQuizQuestion);
+
+
+module.exports.verifySolution = function(req,res,next) {
+		
+		//"question.id" : req.body.question.id
+	
+	Solution.find({
+		"solver.id" : req.user._id+"",
+		"question.id" : req.body.question.id
+	}).exec(function (err, solution) {
+		res.json({"msg" : solution});
+	});
+
+
+	/*
+	var solution = new Solution(req.body);
+	
+	if (req.body.question)
+		solution.question = req.body.question;
+
+
+	solution.save(function(err, solution) {
+		if (err) { return next(err); }
+			res.json(solution);
+	});
+	*/
+
+
+	/*if (req.status.result === "success") {
+		if (req.user.data.referrer.id !== req.question.author.id) {
+			req.status = {
+				"result" : "failure",
+				"message" : "Unauthorized Access"
+			};
+		}
+		else {
+			//Check if answered before
+			var query = Solution.
+							find({"solver.id" : req.user._id,
+				   	    		  "question" : req.question._id});
+			query.exec(function(err, solutions){
+				if (err) {
+					req.status = {
+						"result" : "error",
+						"message" : err
+					};
+					next();
+				}
+				else {
+					if (solutions.length < 1) {
+						req.status = {
+							"result" : "failure",
+							"message" : "User already answered this question"
+						};
+						next();
+					}
+				}
+			});	
+
+
+			req.status = {
+				"result" : "success",
+				"message" : "User authorized"
+			};
+		}
+	}
+	next();
+	*/
+};
+
+router.post('/solutions', auth, this.verifyUser, this.verifySolution);
+
+/* POST new solution to a single question*/
+router.post('/solutions_old/', function(req,res,next) {
+	/**IMPORTANT!
+		At some point will need to check if user is eligible to
+		solve this question before posting a new solution
+	*/
+	var solution = new Solution(req.body);
+	
+	if (req.body.question)
+		solution.question = req.body.question;
+
+
+	solution.save(function(err, solution) {
+		if (err) { return next(err); }
+		res.json(solution);
+	});
+});
+
+
 
 
 /* POST new question to questionnaire 
@@ -629,23 +766,7 @@ router.get('/quiz/question/:quiz', function(req, res, next) {
 
 
 
-/* POST new solution to a single question*/
-router.post('/solutions/', function(req,res,next) {
-	/**IMPORTANT!
-		At some point will need to check if user is eligible to
-		solve this question before posting a new solution
-	*/
-	var solution = new Solution(req.body);
-	
-	if (req.body.question)
-		solution.question = req.body.question;
 
-
-	solution.save(function(err, solution) {
-		if (err) { return next(err); }
-		res.json(solution);
-	});
-});
 
 
 

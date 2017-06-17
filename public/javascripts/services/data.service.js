@@ -89,6 +89,14 @@
       });
     };
 
+    var postSolution = function(solutionData) {
+      return $http.post('/solutions', solutionData, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
     return {
   	  getProfile : getProfile,
       getQuestionnaires: getQuestionnaires,
@@ -99,7 +107,8 @@
       editQuestion : editQuestion,
       newQuestionnaire : newQuestionnaire,
       getQuizzes : getQuizzes,
-      getQuizQuestion : getQuizQuestion
+      getQuizQuestion : getQuizQuestion,
+      postSolution : postSolution
     };
 
   }

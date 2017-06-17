@@ -1,0 +1,79 @@
+<div style="direction: ltr;">{{question}}</div><hr>
+<div class="row" style="margin-bottom:15px;">
+  <div class="col-md-6">
+  <a href="#/quiz/{{question.questionnaire}}" class="btn btn-primary btn-sq-action pull-left">
+    <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+    <h5 style="margin-top: 3px;">חזרה</h5>
+  </a>
+  </div>
+  <div class="col-md-6">
+  <button class="btn btn-success btn-sq-action pull-right" ng-click="confirmSend()">
+    <span class="glyphicon glyphicon-ok" id="action-button-glyph"></span>
+    <h5 style="margin-top: 3px;">שלח</h5>
+  </button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <h2>{{qbody}}</h2>
+  </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-xs-4 col-lg-4">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list3}}</span>
+      </div>
+      <div class="panel-body">
+       <ul dnd-list="models.lists.listC" style="min-height: 111px;"
+        dnd-allowed-types="models.allowedTypes.listC">
+        <li ng-repeat="item in models.lists.listC"
+              dnd-draggable="item"
+              dnd-moved="models.lists.listC.splice($index, 1)"
+              dnd-effect-allowed="move" 
+              class="center-block text-center" dnd-type="item.data.type">
+                <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-C-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+
+
+    <div class="col-md-4 col-xs-4 col-lg-4">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list2}}</span>
+      </div>
+      <div class="panel-body">
+       <ul dnd-list="models.lists.listB" style="min-height: 111px;"
+        dnd-allowed-types="models.allowedTypes.listB">
+        <li ng-repeat="item in models.lists.listB"
+              dnd-draggable="item"
+              dnd-moved="models.lists.listB.splice($index, 1)"
+              dnd-effect-allowed="move" 
+              class="center-block text-center" dnd-type="item.data.type">
+                <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-B-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xs-4 col-lg-4">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list1}}</span>
+      </div>
+      <div class="panel-body">
+       <ul dnd-list="models.lists.listA" style="min-height: 111px; padding-right: 0px;"
+         dnd-allowed-types="models.allowedTypes.listA">
+        <li ng-repeat="item in models.lists.listA"
+              dnd-draggable="item"
+              dnd-moved="models.lists.listA.splice($index, 1)"
+              dnd-effect-allowed="move" dnd-type="item.data.type"
+              class="center-block text-center cstm-draggable-card">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div ng-show="item.type == 'function'" id="plot-A-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+  </div>
