@@ -1,5 +1,6 @@
-<div style="direction: ltr;">{{question}}</div><hr>
-<div class="row" style="margin-bottom:15px;">
+<!--div style="direction: ltr;">{{question}}</div><hr-->
+<div class="container"> 
+ <div class="row" style="margin-bottom:15px;">
   <div class="col-md-6">
   <a href="#/quiz/{{question.questionnaire}}" class="btn btn-primary btn-sq-action pull-left">
     <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
@@ -19,19 +20,20 @@
   </div>
 </div>
 <div class="row">
-    <div class="col-md-4 col-xs-4 col-lg-4">
+  <div style="margin: 0 auto; width:68%;">
+     <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
       <div class="panel-heading list-panel-heading card-matching-list-header text-center">
          <span> {{list3}}</span>
       </div>
-      <div class="panel-body">
-       <ul dnd-list="models.lists.listC" style="min-height: 111px;"
-        dnd-allowed-types="models.allowedTypes.listC">
+      <div class="panel-body no-padding">
+       <ul dnd-list="models.lists.listC" style="padding-top: 3px; min-height: 111px;" class="no-padding"
+        dnd-allowed-types="models.allowedTypes.listC" class="ul-draggable-list">
         <li ng-repeat="item in models.lists.listC"
               dnd-draggable="item"
               dnd-moved="models.lists.listC.splice($index, 1)"
               dnd-effect-allowed="move" 
-              class="center-block text-center" dnd-type="item.data.type">
-                <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+              class="center-block text-center cstm-draggable-card" dnd-type="item.data.type">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
                 <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-C-{{$index}}" style="height: 250px; width:250px;"></div>
           </li>
        </ul>
@@ -39,32 +41,32 @@
     </div>
 
 
-    <div class="col-md-4 col-xs-4 col-lg-4">
+    <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
       <div class="panel-heading list-panel-heading card-matching-list-header text-center">
          <span> {{list2}}</span>
       </div>
-      <div class="panel-body">
-       <ul dnd-list="models.lists.listB" style="min-height: 111px;"
-        dnd-allowed-types="models.allowedTypes.listB">
+      <div class="panel-body no-padding">
+       <ul dnd-list="models.lists.listB" style="padding-top: 3px; min-height: 111px;"
+        dnd-allowed-types="models.allowedTypes.listB" class="no-padding">
         <li ng-repeat="item in models.lists.listB"
               dnd-draggable="item"
               dnd-moved="models.lists.listB.splice($index, 1)"
               dnd-effect-allowed="move" 
-              class="center-block text-center" dnd-type="item.data.type">
-                <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+              class="center-block text-center cstm-draggable-card" dnd-type="item.data.type">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
                 <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-B-{{$index}}" style="height: 250px; width:250px;"></div>
           </li>
        </ul>
       </div>
     </div>
 
-    <div class="col-md-4 col-xs-4 col-lg-4">
+    <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
       <div class="panel-heading list-panel-heading card-matching-list-header text-center">
          <span> {{list1}}</span>
       </div>
-      <div class="panel-body">
-       <ul dnd-list="models.lists.listA" style="min-height: 111px; padding-right: 0px;"
-         dnd-allowed-types="models.allowedTypes.listA">
+      <div class="panel-body no-padding">
+       <ul dnd-list="models.lists.listA" style="padding-top: 3px; min-height: 111px; padding-right: 0px;"
+         dnd-allowed-types="models.allowedTypes.listA" class="no-padding">
         <li ng-repeat="item in models.lists.listA"
               dnd-draggable="item"
               dnd-moved="models.lists.listA.splice($index, 1)"
@@ -77,3 +79,4 @@
       </div>
     </div>
   </div>
+</div>

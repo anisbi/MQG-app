@@ -2,8 +2,8 @@ angular.module('qmaker')
 
 .controller('multiChoiceCtrl', function($stateParams, $scope, $location, authentication, mqgAppData) {
 
-$scope.currentUser = authentication.currentUser();
-
+//$scope.currentUser = authentication.currentUser();
+$scope.currentUser = {"id" : "00000000", "name" : "Test User"};
 //Template for new question
 $scope.question = {
 	qtype: 'multi_choice',
@@ -116,6 +116,7 @@ $scope.commitQuestion = function() {
 
 //Delete an option from the question
 $scope.deleteOption = function(index) {
+	if (index > $scope.question.options.length) return;
 
 	$scope.question.options.splice(index, 1);
 	$scope.question.publicdata.equations.qoptions.splice(index, 1);

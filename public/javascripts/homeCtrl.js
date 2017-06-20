@@ -21,8 +21,8 @@ else {
   
   
   var loadHomePage = function() {
-  	  $scope.currentUser = authentication.currentUser();
-  	  console.log('in load', $scope.questionnaires);
+  	$scope.currentUser = authentication.currentUser();
+  	//console.log('in load', $scope.questionnaires);
 	  $scope.qstnrs = $scope.questionnaires;
 	  $scope.formView = false;
 	  $scope.qstnrsView = false;

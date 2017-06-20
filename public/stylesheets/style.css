@@ -334,17 +334,24 @@ ul[dnd-list] .dndPlaceholder {
 }
 
 .cstm-draggable-card {
-	height: 253px;
-	width: 253px;
+	height: 260px;
+	width: 260px;
 	background-color: #4ABCDC;
 	border: 1px solid #ddd;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
-    display: block;
-    padding: 10px 15px;
-    margin-bottom: -1px;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: 17px;
 }
 
+.width-250, .ul-draggable-list {
+  width: 263px;
+}
+
+.no-padding {
+  padding: 0;
+}
 .cstm-card-mathjax {
     display: inline-block;
     vertical-align: middle;
