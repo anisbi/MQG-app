@@ -115,7 +115,7 @@ function($stateProvider, $urlRouterProvider) {
 	 .state('edit_multi_choice', {
 	 	url: '/questions/{id}/edit/multi_choice',
 	 	templateUrl: '/views/edit_multi_choice.html',
-	 	controller: 'multiChoiceEditCtrl',
+	 	controller: 'multiChoiceCtrl',
 	 })
 
 

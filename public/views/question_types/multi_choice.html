@@ -1,4 +1,5 @@
-<div class="edit-multi-container">
+<div style="direction:ltr">{{question | json}}</div>
+<div class="container">
  <div class="row">
   <div class="col-md-12">
    <form>
@@ -9,21 +10,28 @@
  	  <textarea rows="5" id="question-body" ng-model="question.body" placeholder="הזן כאן גוף השאלה"></textarea>
  	  <h4>שרטוט פונקציה לגוף השאלה</h4>
  	  <input type="text" ng-model="qbodyequation" placeholder="דוגמא: x^2+5" id="edit-equation">
+    <select name="eqType" ng-model="qbodyEqType">
+      <option value="fn">רגילה</option>
+      <option value="im">סתומה</option>
+    </select>
  	  <div for="question-options">
  	  	<h3>תשובות לבחירה</h3>
  	  </div>
  	  <div class="row">
- 	  	<div class="col-xs-4 col-md-4 pull-right hidden-xs hidden-small">
+ 	  	<div class="col-xs-3 col-md-3 pull-right hidden-xs hidden-small">
  	  		<h4>גוף התשובה</h4>
  	  	</div>
  	  	<div class="col-xs-3 col-md-3 pull-right hidden-xs hidden-small">
  	  		<h4>הערה לתשובה זו</h4>
  	  	</div>
- 	  	<div class="col-xs-3 col-md-3 pull-right hidden-xs">
+ 	  	<div class="col-xs-2 col-md-2 pull-right hidden-xs">
  	  		<h4>גרף מצורף לתשובה</h4>
  	  	</div>
+      <div class="col-xs-2 col-md-2 pull-right hidden-xs">
+        <h4>סוג משוואה</h4>
+      </div>
  	  	<div class="col-xs-1 col-md-1 pull-right hidden-xs">
- 	  		<h6>תשובה נכונה</h6>
+ 	  		<h4>תשובה נכונה</h4>
  	  	</div>
  	  	<div class="col-xs-1 col-md-1 pull-right hidden-xs">
  	  		<h4>מחק</h4>
@@ -32,15 +40,21 @@
 
  	  <div class="row" ng-repeat="option in question.options track by $index" for="{{option}}">
 
- 	  	<div class="col-xs-4 col-md-4 pull-right">
+ 	  	<div class="col-xs-3 col-md-3 pull-right">
  	  		<input type="text" ng-model="option.body" placeholder="גוף תשובה" id="edit-multi-text">
  	  	</div>
  	  	<div class="col-xs-3 col-md-3 pull-right">
  	  		<input type="text" ng-model="option.comment" placeholder="הערה לעונה בתשובה זו" id="edit-multi-text">
  	  	</div>
- 	  	<div class="col-xs-3 col-md-3 pull-right">
- 	  		<input type="text" ng-model="qoptionsequation[$index]" placeholder="דוגמה: x^3+7" id="edit-multi-options-equation">
+ 	  	<div class="col-xs-2 col-md-2 pull-right">
+ 	  		<input type="text" ng-model="qoptionsequation[$index].equation" placeholder="דוגמה: x^3+7" id="edit-multi-options-equation">
  	  	</div>
+      <div class="col-xs-2 col-md-2 pull-right">
+        <select name="eqType" ng-model="qoptionsequation[$index].eqType">
+          <option value="fn">רגילה</option>
+          <option value="im">סתומה</option>
+        </select>
+      </div>
  	  	<div class="col-xs-1 col-md-1 pull-right">
  	  	 <input type="radio" name="answer" ng-checked="isAnswer($index)" ng-click="setAnswer($index)" ng-model="answer">
  	  	 
