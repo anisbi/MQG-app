@@ -2,8 +2,11 @@ angular.module('qmaker')
 
 .controller('multiChoiceCtrl', function($stateParams, $scope, $location, authentication, mqgAppData) {
 
-//$scope.currentUser = authentication.currentUser();
-$scope.currentUser = {"id" : "00000000", "name" : "Test User"};
+$scope.currentUser = authentication.currentUser();
+
+//Used for unit testing:
+//$scope.currentUser = {"id" : "00000000", "name" : "Test User"};
+
 //Template for new question
 $scope.question = {
 	qtype: 'multi_choice',

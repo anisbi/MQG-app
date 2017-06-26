@@ -421,48 +421,57 @@ router.get('/quiz', auth, this.verifyUser, this.getQuizzes);
 	In charge of checking eligibility of a student to solve a question.
 */
 module.exports.verifyQuestion = function(req,res,next) {
+/*
+	req.status = {
+		"result" : "failure",
+		"message" : "Unauthorized Access (3)",
+		"t" : typeof(req.user._id+""),
+		"d" : typeof(req.question._id+""),
+		"x" : req.user._id+"",
+		"y" : req.question._id+""
+	};
+	next();
+	*/
 
 	if (req.status.result === "success") {
+		
 		if (req.user.data.referrer.id !== req.question.author.id) {
 			req.status = {
 				"result" : "failure",
 				"message" : "Unauthorized Access"
 			};
+			next();
 		}
 		else {
-			//Check if answered before
-			var query = Solution.find({"qtype" : "multi_choice"});
+			Solution.find({
+				"solver.id" : req.user._id+"",
+				"question.id" : req.question._id+""
+			}).exec(function (err, solution) {
 
-			req.solutions = "ZXCXZXCZXZ";
-			query.exec(function (err, solutions){
-				req.solutions = "test2";
 				if (err) {
 					req.status = {
 						"result" : "error",
 						"message" : err
 					};
+					next();	
+				}
+				if (solution.length === 0) {
+					req.status = {
+						"result" : "success",
+						"message" : "User eligible to solve this question"
+					};
 					next();
 				}
 				else {
-					if (solutions.length === 1) {
-						
-						req.status = {
-							"result" : "failure",
-							"message" : "User already answered this question"
-						};
-						next();
-					}
+					req.status = {
+						"result" : "failure",
+						"message" : "משתמש ענה על שאלה זו מקודם."
+					};
+					next();
 				}
-			});	
-
-
-			req.status = {
-				"result" : "success",
-				"message" : "User authorized"
-			};
+			});
 		}
 	}
-	next();
 };
 /*
 	Shuffles a given array. When a teacher writes a question, the positions
@@ -569,9 +578,10 @@ module.exports.returnQuizQuestion = function(req, res) {
 		}
 	}
 	else if (req.status.result === "failure") {
-		res.status(404).json({
+		res.json({
 			"result" : "failure",
-			"message" : req.status.message
+			"message" : req.status.message,
+			"alt" : req.status
 		});
 	}
 	else if (req.status.result === "error") {
@@ -593,8 +603,30 @@ module.exports.verifySolution = function(req,res,next) {
 		"solver.id" : req.user._id+"",
 		"question.id" : req.body.question.id
 	}).exec(function (err, solution) {
-		res.json({"msg" : solution});
+		if (err) {
+			req.status = {
+				"result" : "error",
+				"message" : err
+			};
+			next();	
+		}
+		if (solution.length === 0) {
+			req.status = {
+				"result" : "success",
+				"message" : "User eligible to solve this question"
+			};
+			next();
+		}
+		else {
+			req.status = {
+				"result" : "failure",
+				"message" : "User already answered this question."
+			};
+			next();
+		}
 	});
+
+
 
 
 	/*
@@ -653,7 +685,43 @@ module.exports.verifySolution = function(req,res,next) {
 	*/
 };
 
-router.post('/solutions', auth, this.verifyUser, this.verifySolution);
+module.exports.postSolution = function(req, res) {
+	if (req.status.result === "success") {
+
+		var solution = new Solution(req.body);
+		solution.save(function(err, solution) {
+			if (err) { 
+				res.status(500).json({
+					"result" : "error",
+					"message" : err
+				});
+			}
+			else {
+				res.json({
+					"result" : "success",
+					"message" : "New solution successfuly posted."
+				});
+			}
+		});
+
+	}
+	
+	else if (req.status.result === "failure") {
+		res.json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+
+};
+
+router.post('/solutions', auth, this.verifyUser, this.verifySolution, this.postSolution);
 
 /* POST new solution to a single question*/
 router.post('/solutions_old/', function(req,res,next) {

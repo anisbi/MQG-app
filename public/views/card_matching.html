@@ -1,9 +1,9 @@
-{{}}
-
 <div class="container">
-	<div style="direction: ltr;">{{question}}</div>
+	<!--div style="direction: ltr;">{{question}}</div-->
 	<div class="row" style="margin-bottom: 7px;">
 		<div class="col-xs-12">
+			<h3>גוף השאלה</h3>
+
 			<textarea rows="5" id="question-body" ng-model="qbody" placeholder="הזן כאן גוף השאלה"></textarea>
 		</div>
 	</div>
@@ -86,8 +86,8 @@
 			        dnd-draggable="item"
 			        dnd-moved="models.lists.listC.splice($index, 1)"
 			        dnd-effect-allowed="move" 
-			        class="center-block text-center" dnd-type="item.data.type">
-				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+			        class="center-block text-center cstm-draggable-card" dnd-type="item.data.type">
+				        <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
 				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-C-{{$index}}" style="height: 250px; width:250px;"></div>
 	    		</li>
 			 </ul>
@@ -109,8 +109,8 @@
 			        dnd-draggable="item"
 			        dnd-moved="models.lists.listB.splice($index, 1)"
 			        dnd-effect-allowed="move" 
-			        class="center-block text-center" dnd-type="item.data.type">
-				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+			        class="center-block text-center cstm-draggable-card" dnd-type="item.data.type">
+				        <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
 				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-B-{{$index}}" style="height: 250px; width:250px;"></div>
 	    		</li>
 			 </ul>
