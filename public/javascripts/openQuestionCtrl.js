@@ -1,29 +1,54 @@
 angular.module('qmaker')
 
-.controller('openQuestionCtrl', function($stateParams, $scope, $location, authentication, mqgAppData) {
+.controller('openQuestionCtrl', function($stateParams, $scope, $state, $timeout, $location, authentication, mqgAppData) {
 
 $scope.currentUser = authentication.currentUser();
 
-//Template for new question
-$scope.question = {
-	qtype: 'open_question',
-	body: '',
-	author: { 
-		id : $scope.currentUser.id,
-		name : $scope.currentUser.name
-	},
-	data: {},
-	publicdata:
-	{
-		equations: {
-			equationsArray: [{
-				equation: '',
-				equationComment: '',
-				equationType: 'fn' //Implicit or function. (Ax+By+C=0 OR y=f(x))
-			}]
+if ($state.current.name === "open_question") {
+	//Template for new question
+	$scope.question = {
+		qtype: 'open_question',
+		body: '',
+		author: { 
+			id : $scope.currentUser.id,
+			name : $scope.currentUser.name
+		},
+		data: {},
+		publicdata:
+		{
+			equations: {
+				equationsArray: [{
+					equation: '',
+					equationComment: '',
+					equationType: 'fn' //Implicit or function. (Ax+By+C=0 OR y=f(x))
+				}]
+			}
 		}
-	}
-};
+	};
+}
+else if ($state.current.name === "edit_open_question") {
+	console.log("confirm");
+	//getQuestion
+	mqgAppData.getQuestion($stateParams.id)
+	.success(function (response) {
+	  if (response.result === "success") {
+	    $scope.questionData = response.data;
+	    loadPageData();
+	  }	
+	  //console.log('$scope inside', $scope.questionnaires);
+	})
+	.error(function(e) {
+		  console.log('error',e);
+	});
+}
+
+var loadPageData = function() {
+	$scope.question = $scope.questionData;
+	$timeout(function() {
+		$scope.refreshPreview();
+	}, 230);
+}
+
 
 //$scope.equations = $scope.question.publicdata.equations.equationsArray;
 
@@ -85,13 +110,24 @@ $scope.deleteGraph = function(index) {
 
 $scope.commitQuestion = function() {
 
-	mqgAppData.newQuestion($stateParams.id, $scope.question)
-	  .success(function(response) {
-	  	$location.path('/questionnaires/' + $stateParams.id);
-	  })
-	  .error(function (e) {
-	  	console.log('error',e);
-	  });
+	if ($state.current.name === "edit_open_question") {
+		mqgAppData.editQuestion($stateParams.id, $scope.question)
+		  .success(function(response) {
+		  	$location.path('/questionnaires/' + $scope.question.questionnaire.id);
+		  })
+		  .error(function (e) {
+		  	console.log('error',e);
+		  });
+	}
+	else if ($state.current.name === "open_question") {	
+		mqgAppData.editQuestion($stateParams.id, $scope.question)
+		  .success(function(response) {
+		  	$location.path('/questionnaires/' + $scope.question.questionnaire.id);
+		  })
+		  .error(function (e) {
+		  	console.log('error',e);
+		  });
+	}
 };
 
 //Handles file uploads.
@@ -134,7 +170,7 @@ mqgAppData.getQuestion($stateParams.id)
 var loadPageData = function() {
 	$scope.question = $scope.questionData;
 	//Adds a graph to the question content
-$scope.addGraph = function() {
+	$scope.addGraph = function() {
 	$scope.question.publicdata.equations.equationsArray.push(
 	 {
 	 	equation: '',
@@ -191,14 +227,8 @@ $scope.deleteGraph = function(index) {
 
 
 $scope.commitQuestion = function() {
+	
 
-	mqgAppData.editQuestion($stateParams.id, $scope.question)
-	  .success(function(response) {
-	  	$location.path('/questionnaires/' + $scope.question.questionnaire.id);
-	  })
-	  .error(function (e) {
-	  	console.log('error',e);
-	  });
 };
 
 //Refresh preview on load.

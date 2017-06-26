@@ -1,0 +1,46 @@
+<div class="container" ng-hide="failure">
+ <div class="row" style="margin-bottom:15px;">
+  <div class="col-md-6">
+  <a href="#/quiz/{{question.questionnaire}}" class="btn btn-primary btn-sq-action pull-left">
+    <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+    <h5 style="margin-top: 3px;">חזרה</h5>
+  </a>
+  </div>
+  <div class="col-md-6">
+  <button class="btn btn-success btn-sq-action pull-right" ng-click="confirmSend()">
+    <span class="glyphicon glyphicon-ok" id="action-button-glyph"></span>
+    <h5 style="margin-top: 3px;">שלח</h5>
+  </button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="preview-container">
+      <h4>
+        <span mathjax-bind="question.body"></span>
+      </h4>
+      <h4>גרפים</h4>
+      <div class="graphs-preview" ng-repeat="equation in question.publicdata.equations.equationsArray track by $index" for="{{equation}}" style="display: inline;">
+        <div class="graph-title"><h3>{{equation.equationComment}}</h3></div>
+        <div id="plot-{{$index}}" style="height: 250px; width:250px;"></div>
+      </div> 
+    </div>
+  </div>
+ </div>
+</div>
+
+<div class="container" ng-show="failure">
+  <div class="row">
+    <div class="col-xs-3">
+    </div>
+    <div class="col-xs-12">
+      <div class="alert alert-danger">
+        {{message}}
+        <a href="#/quiz/{{question.questionnaire}}">
+          חזרה
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

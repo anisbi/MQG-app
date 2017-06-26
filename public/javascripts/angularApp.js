@@ -128,7 +128,7 @@ function($stateProvider, $urlRouterProvider) {
  	 .state('edit_open_question', {
 	 	url: '/questions/{id}/edit/open_question',
 	 	templateUrl: '/views/question_types/open_question.html',
-	 	controller: 'openQuestionEditCtrl',
+	 	controller: 'openQuestionCtrl',
 	 })
 
 	 .state('pair_matching', {
@@ -179,7 +179,13 @@ function($stateProvider, $urlRouterProvider) {
 	 	url: '/quiz/{questionnaire_id}/{question_id}/card_matching',
 	 	templateUrl: '/views/solve_card_matching.html',
 	 	controller: 'solveCardMatchingCtrl'
-	 })	
+	 })
+
+   .state('quiz_solve_open_question', {
+    url: '/quiz/{questionnaire_id}/{question_id}/open_question',
+    templateUrl: '/views/solve_open_question.html',
+    controller: 'solveOpenQuestionCtrl'
+   })
 
 	 .state('registerTeacher', {
 	 	url: '/register/teacher',

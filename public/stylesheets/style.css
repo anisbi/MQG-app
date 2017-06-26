@@ -248,7 +248,7 @@ input[type=text]:focus, textarea:focus, select:focus {
 	color: #FBAF61;
 }
 
-.multi-preview-container {
+.multi-preview-container, .preview-container {
 	border-radius: 1px;
 	border: 1px dotted gray;
 	padding: 15px;

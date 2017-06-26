@@ -10,6 +10,7 @@ angular.module('qmaker')
         $scope.failure = true;
         $scope.message = data.message;
         $scope.question = {"questionnaire" : $stateParams.questionnaire_id};
+        return;
       }
       else if (data.result === "success") {
         $scope.failure = false;
@@ -91,6 +92,7 @@ angular.module('qmaker')
    };
 
   $scope.plotView = function() {
+    if ($scope.failure) return;
     //Plot first list
     for (var i = 0; i < $scope.models.lists.listA.length; i++) {
       
