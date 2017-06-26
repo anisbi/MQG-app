@@ -221,7 +221,7 @@ input[type=text]:focus, textarea:focus, select:focus {
 	border: 0px solid #188F3C;
 }
 
-#question-body, #edit-multi-text, #edit-multi-options-equation {
+#question-body, #edit-multi-text, #edit-multi-options-equation, #answer-body {
 	width: 100%;
 }
 #edit-multi-text, #edit-equation {

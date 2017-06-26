@@ -556,8 +556,7 @@ module.exports.returnQuizQuestion = function(req, res) {
 					"listNameB" : req.question.publicdata.list2,
 					"listNameC" : req.question.publicdata.list3
 				},
-				"questionnaire" : req.question.questionnaire.id,
-				"solutions" : req.solutions
+				"questionnaire" : req.question.questionnaire.id
 			};
 
 
@@ -568,6 +567,27 @@ module.exports.returnQuizQuestion = function(req, res) {
 				"data" : quizQuestionObj
 			});
 
+		}
+
+		else if (req.params.qtype === "open_question") {
+			var quizQuestionObj = {
+				"id" : req.question._id,
+				"author" : {
+					"id" : req.question.author.id,
+					"name" : req.question.name
+				},
+				"data" : {
+					"body" : req.question.body,
+					"equations" : req.question.publicdata.equations.equationsArray
+				},
+				"questionnaire" : req.question.questionnaire.id
+			};
+
+			res.json({
+				"result" : "success",
+				"message" : "Quiz data in 'data' field",
+				"data" : quizQuestionObj
+			});
 		}
 
 		else {

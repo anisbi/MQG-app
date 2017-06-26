@@ -14,23 +14,56 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom: 23px;">
   <div class="col-xs-12">
     <div class="preview-container">
-      <h4>
-        <span mathjax-bind="question.body"></span>
+      <h4 style="margin-bottom: 48px;">
+        <span mathjax-bind="question.data.body"></span>
       </h4>
-      <h4>גרפים</h4>
-      <div class="graphs-preview" ng-repeat="equation in question.publicdata.equations.equationsArray track by $index" for="{{equation}}" style="display: inline;">
+      <h4 ng-show="question.data.equations.length > 0">גרפים</h4>
+      <div class="graphs-preview" ng-repeat="equation in question.data.equations track by $index" for="{{equation}}" style="display: inline;">
         <div class="graph-title"><h3>{{equation.equationComment}}</h3></div>
         <div id="plot-{{$index}}" style="height: 250px; width:250px;"></div>
       </div> 
     </div>
   </div>
  </div>
+
+ <div class="row">
+  <div class="col-xs-12">
+    <h3>הקלד תשובה בשדה הבא:</h3>
+    <textarea rows="5" id="answer-body" ng-model="answerBody" placeholder="הזן כאן גוף השאלה"></textarea>
+  </div>
+ </div>
+
+ <div class="row">
+  <div class="col-xs-12">
+    <h3>תצוגה מקדימה</h3>
+    <p>כך תיראה תשובתך לאחר שליחה</p>
+    <div class="preview-container" style="margin-botton: 23px;">
+       <span mathjax-bind="answerBody"></span>
+    </div>
+  </div>
+ </div>
+
+ <div class="row" style="margin-bottom:15px; margin-top:15px;">
+  <div class="col-md-6">
+  <a href="#/quiz/{{question.questionnaire}}" class="btn btn-primary btn-sq-action pull-left">
+    <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+    <h5 style="margin-top: 3px;">חזרה</h5>
+  </a>
+  </div>
+  <div class="col-md-6">
+  <button class="btn btn-success btn-sq-action pull-right" ng-click="confirmSend()">
+    <span class="glyphicon glyphicon-ok" id="action-button-glyph"></span>
+    <h5 style="margin-top: 3px;">שלח</h5>
+  </button>
+  </div>
 </div>
 
-<div class="container" ng-show="failure">
+</div>
+
+<div class="container" ng-show="failure && dataLoaded">
   <div class="row">
     <div class="col-xs-3">
     </div>

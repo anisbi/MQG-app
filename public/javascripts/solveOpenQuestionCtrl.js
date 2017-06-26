@@ -4,6 +4,7 @@ angular.module('qmaker')
   $scope.currentUser = authentication.currentUser();
 
   $scope.failure = true;
+  $scope.dataLoaded = false;
   mqgAppData.getQuizQuestion("open_question", $stateParams.question_id)
      .success(function (data) {
 
@@ -17,6 +18,7 @@ angular.module('qmaker')
         $scope.receivedQuizQuestion = data;
         loadPageData();
       }
+      $scope.dataLoaded = true;
      })
      .error(function(e) {
         $scope.failure = true;
@@ -26,6 +28,11 @@ angular.module('qmaker')
 
   var loadPageData = function() {
     $scope.question = $scope.receivedQuizQuestion.data;
+    $scope.answerBody = '';
+    $timeout(function() {
+      console.log('plotting view.');
+      $scope.plotGraphs();
+    }, 230);
   };
 
   $scope.confirmSend = function() {
@@ -76,4 +83,43 @@ angular.module('qmaker')
      });
    };
 
+   $scope.plotGraphs = function() {
+    for (var i=0; i<$scope.question.data.equations.length; i++) {
+     var item = $scope.question.data.equations[i];
+     if (item.equationType === 'fn') {
+      try { //plot equation in body
+        functionPlot({
+            width: 250,
+            height: 250,
+              target: '#plot-'+i,
+              data: [{
+                fn: item.equation,
+                sampler: 'builtIn',
+                graphType: 'polyline'
+              }]
+          });
+      } catch (err) {
+        console.log('err caught: '+err);
+        $scope.plotError = true;
+      }
+    }
+    //Case implicit function
+    else if (item.equationType === 'im') {
+      try { //plot equation in body
+        functionPlot({
+            width: 250,
+            height: 250,
+              target: '#plot-'+i,
+              data: [{
+                fn: item.equation,
+                fnType: 'implicit'
+              }]
+          });
+      } catch (err) {
+        console.log('err caught: '+err);
+        $scope.plotError = true;
+      }
+    }
+   }
+  };
 })
