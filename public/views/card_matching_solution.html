@@ -13,6 +13,127 @@
     </div>
   </div>
 
+   <div class="row">
+     <div class="col-xs-12 text-center">
+      <h4>במסגרת הבאה מופיעה השאלה עם הסדר שהתקבל ע״י המורה</h4>
+     </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+
+      <p>{{qbody}}</p>
+
+    </div>
+  </div>
+
+  <div class="row">
+  <div style="margin: 0 auto; width:68%;">
+     <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list3}}</span>
+      </div>
+      <div class="panel-body no-padding">
+       <ul style="padding-top: 3px; min-height: 111px;" class="no-padding" class="ul-draggable-list">
+        <li ng-repeat="item in solutionModels.lists.listC"
+              class="center-block text-center cstm-draggable-card">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-solution-C-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+
+
+    <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list2}}</span>
+      </div>
+      <div class="panel-body no-padding">
+       <ul style="padding-top: 3px; min-height: 111px;" class="no-padding">
+        <li ng-repeat="item in solutionModels.lists.listB"
+              class="center-block text-center cstm-draggable-card">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-solution-B-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list1}}</span>
+      </div>
+      <div class="panel-body no-padding">
+       <ul dnd-list="models.lists.listA" style="padding-top: 3px; min-height: 111px; padding-right: 0px;" class="no-padding">
+        <li ng-repeat="item in solutionModels.lists.listA"
+              class="center-block text-center cstm-draggable-card">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div ng-show="item.type == 'function'" id="plot-solution-A-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row" style="margin-top: 37;">
+  <div class="col-xs-12 text-center">
+    <h4>במסגרת מתחת מופיעה התשובה בסדר שנשלח ע״י התלמיד:</h4>
+  </div>
+</div>
+<div class="row">
+  <div style="margin: 0 auto; width:68%;">
+     <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list3}}</span>
+      </div>
+      <div class="panel-body no-padding">
+       <ul style="padding-top: 3px; min-height: 111px;" class="no-padding" class="ul-draggable-list">
+        <li ng-repeat="item in answerModels.lists.listC"
+              class="center-block text-center cstm-draggable-card">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-answer-C-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+
+
+    <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list2}}</span>
+      </div>
+      <div class="panel-body no-padding">
+       <ul style="padding-top: 3px; min-height: 111px;" class="no-padding">
+        <li ng-repeat="item in answerModels.lists.listB"
+              class="center-block text-center cstm-draggable-card">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-answer-B-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
+      <div class="panel-heading list-panel-heading card-matching-list-header text-center">
+         <span> {{list1}}</span>
+      </div>
+      <div class="panel-body no-padding">
+       <ul dnd-list="models.lists.listA" style="padding-top: 3px; min-height: 111px; padding-right: 0px;" class="no-padding">
+        <li ng-repeat="item in answerModels.lists.listA"
+              class="center-block text-center cstm-draggable-card">
+                <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div ng-show="item.type == 'function'" id="plot-answer-A-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+       </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="container" ng-show="failure && dataLoaded">
   <div class="row">
     <div class="col-xs-3">
