@@ -1,28 +1,42 @@
 angular.module('qmaker')
 
 .controller('solvePairMatchingCtrl', function($scope, $stateParams, $timeout, authentication, mqgAppData) {
+  $scope.currentUser = authentication.currentUser();
 
+  $scope.dataLoaded = false;
 	mqgAppData.getQuizQuestion("pair_matching", $stateParams.question_id)
      .success(function (data) {
-     	$scope.receivedQuizzes = data;
-     	loadPageData();
+      if (data.result === "failure") {
+        $scope.failure = true;
+        $scope.dataLoaded = true;
+        $scope.message = data.message;
+        $scope.question = {"questionnaire" : $stateParams.questionnaire_id};
+        return;
+      }
+      else if (data.result === "success") {
+        $scope.failure = false;
+        $scope.dataLoaded = true;
+        $scope.receivedQuizzes = data;
+        loadPageData();
+      }
+     	
      })
      .error(function(e) {
      	console.log('error',e);
      });
 
      var loadPageData = function() {
-     	$scope.data = $scope.receivedQuizzes.data;
-          $scope.models = {
-             lists: {"A": [], "B": []}
-          };
-          $scope.models.lists.A = $scope.data.lists.A;
-          $scope.models.lists.B = $scope.data.lists.B;
+     	$scope.data = $scope.question = $scope.receivedQuizzes.data;
+      $scope.models = {
+         lists: {"A": [], "B": []}
+      };
+      $scope.models.lists.A = $scope.data.lists.A;
+      $scope.models.lists.B = $scope.data.lists.B;
 
-          $timeout(function() {
-               console.log('plotting view.');
-               $scope.plotView();
-          }, 230);
+      $timeout(function() {
+           console.log('plotting view.');
+           $scope.plotView();
+      }, 230);
      };
 
      $scope.confirmSend = function() {
@@ -48,9 +62,30 @@ angular.module('qmaker')
             });
      };
 
-     $scope.sendAnswer = function() {
-          console.log('Sending answer');
-     }
+    $scope.sendAnswer = function() {
+      var dataToSend = {
+        "solver": {
+          "id" : $scope.currentUser.id,
+          "name" : $scope.currentUser.name
+        },
+        "question": {
+          "id" : $scope.question.id,
+          "qtype" : "pair_matching",
+          "author" : {
+            "id" : $scope.question.author.id,
+            "name" : $scope.question.author.name
+          }
+        },
+        "data": $scope.models.lists
+      };
+      mqgAppData.postSolution(dataToSend)
+       .success(function (data) {
+         console.log("After posting answer:",data);
+       })
+       .error(function(e) {
+        console.log('error',e);
+       });
+    }
 
      $scope.$watch('models', function(model) {
         $scope.modelAsJson = angular.toJson(model, true);

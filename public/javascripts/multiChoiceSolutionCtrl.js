@@ -1,7 +1,7 @@
 angular.module('qmaker')
 
 .controller('multiChoiceSolutionCtrl', function($scope, $stateParams, $timeout, $state, authentication, mqgAppData) {
- $scope.currentUser = authentication.currentUser();
+  $scope.currentUser = authentication.currentUser();
   $scope.failure = true;
   $scope.dataLoaded = false;
   mqgAppData.getUserSolution("multi_choice", $stateParams.question_id)

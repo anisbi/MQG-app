@@ -1,0 +1,62 @@
+<div style="direction: ltr;">
+{{solution}}
+</div>
+
+<div class="container" ng-hide="failure">
+  <div class="row" style="margin-bottom:15px;">
+      <div class="col-xs-10 pull-right">
+        <h2>עיון בתשובה</h2>
+        <p>שאלה מסוג: {{solution.question.qtype}}</p>
+        <p>תשובה התקבלה בתאריך: {{solutionDate}}</p>
+      </div>
+      <div class="col-xs-2">
+        <a href="#/solutions/{{question.questionnaire.id}}" class="btn btn-primary btn-sq-action pull-left">
+        <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">חזרה</h5>
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+     <div class="col-xs-12 text-center">
+      <h4>במסגרת הבאה מופיעה השאלה והתשובה שהתקבלה מהתלמיד</h4>
+     </div>
+  </div>
+
+  <div class="row" style="margin-bottom: 23px;">
+   <div class="col-xs-12">
+    <div class="preview-container">
+      <h4 style="margin-bottom: 48px;">
+        <span mathjax-bind="question.body"></span>
+      </h4>
+      <h4 ng-show="question.publicdata.equations.equationsArray.length > 0">גרפים</h4>
+      <div class="graphs-preview" ng-repeat="equation in question.publicdata.equations.equationsArray track by $index" for="{{equation}}" style="display: inline;">
+        <div class="graph-title"><h3>{{equation.equationComment}}</h3></div>
+        <div id="plot-{{$index}}" style="height: 250px; width:250px;"></div>
+      </div>
+      <div>
+        <h4>תשובה שהתקבלה מהתלמיד</h4>
+          <p>{{solution.data}}</p>
+      </div>
+    </div>
+   </div>
+  </div>
+
+</div>
+
+
+<!-- View in case of error -->
+<div class="container" ng-show="failure && dataLoaded">
+  <div class="row">
+    <div class="col-xs-3">
+    </div>
+    <div class="col-xs-12">
+      <div class="alert alert-danger">
+        {{message}}
+        <a href="#/solutions/{{questionnaire_id}}">
+          חזרה
+      </a>
+      </div>
+    </div>
+  </div>
+</div>

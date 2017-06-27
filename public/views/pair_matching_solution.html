@@ -1,0 +1,115 @@
+<div style="direction: ltr;">
+{{solution}}
+<hr>
+{{question}}
+<hr>
+{{solutionModels}}
+</div>
+
+<div class="container" ng-hide="failure">
+  <div class="row" style="margin-bottom:15px;">
+      <div class="col-xs-10 pull-right">
+        <h2>עיון בתשובה</h2>
+        <p>שאלה מסוג: {{solution.question.qtype}}</p>
+        <p>תשובה התקבלה בתאריך: {{solutionDate}}</p>
+      </div>
+      <div class="col-xs-2">
+        <a href="#/solutions/{{question.questionnaire.id}}" class="btn btn-primary btn-sq-action pull-left">
+        <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">חזרה</h5>
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+     <div class="col-xs-12 text-center">
+      <h4>במסגרת הבאה מופיעה השאלה והתשובה שהתקבלה מהתלמיד</h4>
+     </div>
+  </div>
+
+  <div class="row">
+   <div class="col-md-6 col-xs-6">
+    <div class="panel-heading list-panel-heading">
+      List A
+    </div>
+    <div class="panel-body">
+      <ul style="min-height: 111px;">
+        <li ng-repeat="item in solutionModels.lists.A"
+              class="center-block text-center">
+                <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-A-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+      </ul>
+    </div>
+  </div>  
+  <div class="col-md-6 col-xs-6">
+    <div class="panel-heading">List B</div>
+    <div class="panel-body">
+      <ul style="min-height: 111px;">
+        <li ng-repeat="item in solutionModels.lists.B"
+              class="center-block text-center">
+                <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+                <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-B-{{$index}}" style="height: 250px; width:250px;"></div>
+          </li>
+      </ul>
+    </div>
+   </div>
+  </div>
+
+
+
+
+
+<div class="row">
+  <div class="col-xs-12 text-center">
+  <h4>במסגרת הבאה מופיעה התשובה שהתקבלה מהתלמיד</h4>
+  </div>
+  </div>
+
+  <div class="row">
+  <div class="col-md-6 col-xs-6">
+  <div class="panel-heading list-panel-heading">
+  List A
+  </div>
+  <div class="panel-body">
+    <ul style="min-height: 111px;">
+      <li ng-repeat="item in solutionModels.lists.A"
+            class="center-block text-center">
+              <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+              <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-answer-A-{{$index}}" style="height: 250px; width:250px;"></div>
+        </li>
+    </ul>
+  </div>
+  </div>  
+  <div class="col-md-6 col-xs-6">
+  <div class="panel-heading">List B</div>
+  <div class="panel-body">
+  <ul style="min-height: 111px;">
+    <li ng-repeat="item in solutionModels.lists.B"
+          class="center-block text-center">
+            <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+            <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-answer-B-{{$index}}" style="height: 250px; width:250px;"></div>
+      </li>
+  </ul>
+  </div>
+  </div>
+  </div>
+
+</div>
+
+
+<!-- View in case of error -->
+<div class="container" ng-show="failure && dataLoaded">
+  <div class="row">
+    <div class="col-xs-3">
+    </div>
+    <div class="col-xs-12">
+      <div class="alert alert-danger">
+        {{message}}
+        <a href="#/solutions/{{questionnaire_id}}">
+          חזרה
+      </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -48,7 +48,7 @@ module.exports.profileRead = function(req, res) {
 		*/
 		var user = verifyId(req.payload._id);
 		if (user === undefined) {
-		  res.status(404).json({
+		  res.json({
 			"result" : "failure",
 			"message" : "User not found"
 		  });
@@ -252,7 +252,7 @@ module.exports.saveQuestion = function(req, res) {
 	});
   }
   else if (req.status.result === "failure") {
-		res.status(404).json({
+		res.json({
 			"result" : "failure",
 			"message" : req.status.message
 		});
@@ -338,7 +338,7 @@ module.exports.getQuizzes = function(req, res, next) {
 	});
   }
   else if (req.status.result === "failure") {
-		res.status(404).json({
+		res.json({
 			"result" : "failure",
 			"message" : req.status.message
 		});
@@ -400,7 +400,7 @@ module.exports.returnQuiz = function(req,res) {
 		});
 	}
 	else if (req.status.result === "failure") {
-		res.status(404).json({
+		res.json({
 			"result" : "failure",
 			"message" : req.status.message
 		});
@@ -620,7 +620,7 @@ module.exports.returnQuizQuestion = function(req, res) {
 		}
 
 		else {
-			res.status(404).json({
+			res.json({
 				"result" : "failure",
 				"message" : "Unrecognized question type"
 			});
@@ -801,7 +801,7 @@ module.exports.returnSolvedQuizzes = function(req, res) {
 	});
   }
   else if (req.status.result === "failure") {
-		res.status(404).json({
+		res.json({
 			"result" : "failure",
 			"message" : req.status.message
 		});
@@ -857,7 +857,7 @@ module.exports.returnSolutionData = function(req, res) {
 		});
   }
   else if (req.status.result === "failure") {
-		res.status(404).json({
+		res.json({
 			"result" : "failure",
 			"message" : req.status.message
 		});
@@ -1226,7 +1226,7 @@ register = function(req, res) {
 	} //End of result == success
 
 	else if (req.status.result === "failure") {
-		res.status(404).json({
+		res.json({
 			"result" : "failure",
 			"message" : req.status.message
 		});
