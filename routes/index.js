@@ -772,6 +772,105 @@ module.exports.postSolution = function(req, res) {
 
 router.post('/solutions', auth, this.verifyUser, this.verifySolution, this.postSolution);
 
+/*
+	At the moment returns all quizzes, but I would like it to return 
+	only quizzes that have been completed by the student.
+*/
+module.exports.returnSolvedQuizzes = function(req, res) {
+	if (req.status.result === "success") {
+	var query = Questionnaire
+					.find({
+						"author.id" : req.user.data.referrer.id
+					}).populate('questions', '-data');
+
+	query.exec(function (err, questionnaires) {
+		if (err) {
+			res.status(500).json({
+				"result" : "error",
+				"message" : err
+			});
+		}
+		else {
+			res.json({
+				"result" : "success",
+				"message" : "Questionnaires in data field",
+				"data" : questionnaires
+			});
+		}
+		
+	});
+  }
+  else if (req.status.result === "failure") {
+		res.status(404).json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+};
+router.get('/solutions', auth, this.verifyUser, this.returnSolvedQuizzes);
+
+module.exports.verifyQuizSolution = function(req, res, next) {
+	Solution.find({
+		"solver.id" : req.user._id+"",
+		"question.id" : req.question._id+""
+	}).exec(function (err, solution) {
+		if (err) {
+			req.status = {
+				"result" : "error",
+				"message" : err
+			};
+			next();	
+		}
+		if (solution.length === 0) {
+			req.status = {
+				"result" : "failure",
+				"message" : "משתמש טרם ענה על שאלה זו."
+			};
+			
+			next();
+		}
+		else {
+			req.status = {
+				"result" : "success",
+				"message" : "Solution attached to req.solution"
+			};
+			req.solution = solution
+			next();
+		}
+	});
+};
+
+module.exports.returnSolutionData = function(req, res) {
+	if (req.status.result === "success") {
+		res.json({
+			"result" : "success",
+			"data" : {
+				"solution" : req.solution,
+				"question" : req.question
+			}
+		});
+  }
+  else if (req.status.result === "failure") {
+		res.status(404).json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+};
+router.get('/solutions/:question/:qtype', auth, this.verifyUser, this.verifyQuizSolution, this.returnSolutionData);
+
 /* POST new solution to a single question*/
 router.post('/solutions_old/', function(req,res,next) {
 	/**IMPORTANT!
@@ -830,7 +929,7 @@ router.get('/questionnaires/:questionnaire', function(req, res, next) {
 
 /*
 	Gets all solutions (questions solved by students) from db.
-*/
+
 router.get('/solutions', function(req, res, next) {
 	Solution.find(function(err, solutions) {
 		if (err) { return next(err); }
@@ -838,7 +937,7 @@ router.get('/solutions', function(req, res, next) {
 		res.json(solutions);
 	});
 });
-
+*/
 
 
 
@@ -891,7 +990,7 @@ router.get('/quiz/question/:quiz', function(req, res, next) {
 	Used to determine whether a user has answered a question.
 	Very early implementation, relevant to multi_choice questions only.
 	(not part of prototype).
-*/
+
 router.get('/solutions/:uid/:question/', function(req,res,next) {
 
 	if (req.question) {
@@ -917,7 +1016,7 @@ router.get('/solutions/:uid/:question/', function(req,res,next) {
 	else { res.json({Error: 'Question not found'}); }
 
 });
-
+*/
 
 /* define ':questionnaire' in URL */
 router.param('questionnaire', function(req, res, next, id) {

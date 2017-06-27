@@ -193,6 +193,43 @@ function($stateProvider, $urlRouterProvider) {
     controller: 'solveMultiChoiceCtrl'
    })
 
+   .state('solutions', {
+    url: '/solutions',
+    templateUrl: '/views/solutions.html',
+    controller: 'solutionsCtrl'
+   })
+
+   .state('quizSolutions', {
+    url: '/solutions/{questionnaire_id}',
+    templateUrl: '/views/quiz_solutions.html',
+    controller: 'solutionsCtrl'
+   })
+
+   .state('multi_choice_solution', {
+    url: '/solutions/{questionnaire_id}/{question_id}/multi_choice',
+    templateUrl: '/views/multi_choice_solution.html',
+    controller: 'multiChoiceSolutionCtrl'
+   })
+
+   .state('open_question_solution', {
+    url: '/solutions/{questionnaire_id}/{question_id}/open_question',
+    templateUrl: '/views/open_question_solution.html',
+    controller: 'openQuestionSolutionCtrl'
+   })
+
+   .state('card_matching_solution', {
+    url: '/solutions/{questionnaire_id}/{question_id}/card_matching',
+    templateUrl: '/views/card_matching_solution.html',
+    controller: 'cardMatchingSolutionCtrl'
+   })
+
+   .state('pair_matching_solution', {
+    url: '/solutions/{questionnaire_id}/{question_id}/pair_matching',
+    templateUrl: '/views/pair_matching_solution.html',
+    controller: 'pairMatchingSolutionCtrl'
+   })
+
+
 	 .state('registerTeacher', {
 	 	url: '/register/teacher',
 	 	templateUrl: '/views/register.html',

@@ -97,6 +97,24 @@
       });
     };
 
+    var getQuizzesSolutions = function() {
+      return $http.get('/solutions', {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
+    var getUserSolution = function(qtype, qid) {
+      return $http.get('/solutions/'+qid+'/'+qtype, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
+    
+
     return {
   	  getProfile : getProfile,
       getQuestionnaires: getQuestionnaires,
@@ -108,7 +126,9 @@
       newQuestionnaire : newQuestionnaire,
       getQuizzes : getQuizzes,
       getQuizQuestion : getQuizQuestion,
-      postSolution : postSolution
+      postSolution : postSolution,
+      getQuizzesSolutions : getQuizzesSolutions,
+      getUserSolution : getUserSolution
     };
 
   }

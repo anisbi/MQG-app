@@ -1,0 +1,63 @@
+<!--div style="direction: ltr">{{quizzes | json}}</div-->
+
+
+
+<div class="row" style="margin:0% 3%;">
+  <div class="col-md-12">
+    <table class="table table-hover table-striped text-right">
+      <thead>
+        <tr>
+          <th class="text-right">
+            #
+          </th>
+          <th class="text-right">
+            סוג שאלה
+          </th>
+          <th class="text-right">
+            נכתב ע״י
+          </th>
+          <th class="text-left">
+            פעולה
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="question in questionnaire.questions track by $index">
+          <td>
+            {{$index+1}}
+          </td>
+          <td>
+            {{question.qtype}}
+          </td>
+          <td>
+            {{question.author.name}}
+          </td>
+          <td>
+            <a href="#/solutions/{{questionnaire._id}}/{{question._id}}/{{question.qtype}}" class="btn btn-default pull-left text-left">
+              הצג פתרון
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
+
+<!--{{size}}v
+{{solved}}
+<hr>
+
+
+<hr>
+<div ng-repeat="question in questions track by $index">
+  {{$index+1}} 
+  {{question.qtype}}
+  {{shortBody[$index]}}
+  <a href="v">Solve.</a>
+</div>
+
+-->

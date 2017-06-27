@@ -1,0 +1,57 @@
+<div class="container" ng-hide="failure">
+  <div class="row" style="margin-bottom:15px;">
+      <div class="col-xs-10 pull-right">
+        <h2>עיון בתשובה</h2>
+        <p>שאלה מסוג: {{solution.question.qtype}}</p>
+        <p>תשובה התקבלה בתאריך: {{solutionDate}}</p>
+      </div>
+      <div class="col-xs-2">
+        <a href="#/solutions/{{question.questionnaire.id}}" class="btn btn-primary btn-sq-action pull-left">
+        <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">חזרה</h5>
+      </a>
+    </div>
+  </div>
+
+    <div class="row">
+       <div class="col-xs-12">
+        <h4>מתחת מופיעה השאלה והתשובות האפשריות. לאחר מכן התשובה עליה ענית והתשובה של המורה.</h4>
+       </div>
+    </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+        <div class="multi-preview-container">
+          <h3><span mathjax-bind="question.body"></span></h3>
+         
+          <div id="plot-body" style="height: 250px; width:250px;" ng-hide="qbodyequation.length==0"></div>
+          <h4>התשובות האפשריות</h4>
+          <ol>
+            <li ng-repeat="option in question.options track by $index">
+              <h4><span mathjax-bind="option.body"></span></h4>
+              <div id="plot-{{$index}}" style="height: 250px; width:250px;" ng-hide="qoptionsequation[$index].equation.length==0">
+              </div>
+            </li>
+          </ol>
+          <div><h4>תשובת התלמיד: {{solution.data.answer +1}}</h4></div>
+          <div><h4>תשובת המורה: {{question.data.answer+ 1}}</h4></div>
+          <div><h4>הערה מהמורה: {{question.options[solution.data.answer].comment}}</h4></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" ng-show="failure && dataLoaded">
+  <div class="row">
+    <div class="col-xs-3">
+    </div>
+    <div class="col-xs-12">
+      <div class="alert alert-danger">
+        {{message}}
+        <a href="#/solutions/{{question.questionnaire.id}}">
+          חזרה
+      </a>
+      </div>
+    </div>
+  </div>
+</div>
