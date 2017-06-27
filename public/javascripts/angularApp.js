@@ -187,6 +187,12 @@ function($stateProvider, $urlRouterProvider) {
     controller: 'solveOpenQuestionCtrl'
    })
 
+   .state('quiz_solve_multi_choice', {
+    url: '/quiz/{questionnaire_id}/{question_id}/multi_choice',
+    templateUrl: '/views/solve_multi_choice.html',
+    controller: 'solveMultiChoiceCtrl'
+   })
+
 	 .state('registerTeacher', {
 	 	url: '/register/teacher',
 	 	templateUrl: '/views/register.html',

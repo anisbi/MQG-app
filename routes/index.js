@@ -590,6 +590,35 @@ module.exports.returnQuizQuestion = function(req, res) {
 			});
 		}
 
+		else if (req.params.qtype === "multi_choice") {
+			//Extract the options. Remove the 'comment' from returning. Since
+			//comment may contain hints to the correct answer.
+			var safeOptions = Array();
+			for (var i = 0; i < req.question.options.length; i++) {
+				safeOptions.push(req.question.options[i].body);
+			}
+
+			var quizQuestionObj = {
+				"id" : req.question._id,
+				"author" : {
+					"id" : req.question.author.id,
+					"name" : req.question.name
+				},
+				"data" : {
+					"body" : req.question.body,
+					"options" : safeOptions,
+					"equations" : req.question.publicdata.equations
+				},
+				"questionnaire" : req.question.questionnaire.id
+			};
+
+			res.json({
+				"result" : "success",
+				"message" : "Quiz data in 'data' field",
+				"data" : quizQuestionObj
+			});
+		}
+
 		else {
 			res.status(404).json({
 				"result" : "failure",

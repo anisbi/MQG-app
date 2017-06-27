@@ -1,0 +1,61 @@
+<div class="container" ng-hide="failure">
+  <div class="row" style="margin-bottom:15px;">
+      <div class="col-md-6">
+      <a href="#/quiz/{{question.questionnaire}}" class="btn btn-primary btn-sq-action pull-left">
+        <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">חזרה</h5>
+      </a>
+    </div>
+    <div class="col-md-6">
+      <button class="btn btn-success btn-sq-action pull-right" ng-click="confirmSend()">
+        <span class="glyphicon glyphicon-ok" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">שלח</h5>
+      </button>
+    </div>
+  </div>
+
+    <div class="row">
+       <div class="col-xs-12 center-block text-center">
+        <h4>לאחר קריאת השאלה ועיון בתשובות, סמן את התשובה הנכונה</h4>
+        <form>
+          <button class="btn btn-primary btn-multichoice-answer" ng-repeat="option in question.data.options track by $index" ng-click="setAnswer($index)" ng-class="{'multichoice-answer-btn-active': chosenAnswer == $index}">
+            תשובה {{$index+1}}
+          </button>
+        </form>
+       </div>
+    </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+        <div class="multi-preview-container">
+          <h3><span mathjax-bind="question.data.body"></span></h3>
+         
+          <div id="plot-body" style="height: 250px; width:250px;" ng-hide="qbodyequation.length==0"></div>
+          <h4>התשובות האפשריות</h4>
+          <ol>
+            <li ng-repeat="option in question.data.options track by $index">
+              <h4><span mathjax-bind="option"></span></h4>
+              <div id="plot-{{$index}}" style="height: 250px; width:250px;" ng-hide="qoptionsequation[$index].equation.length==0">
+              </div>
+            </li>
+          </ol>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" ng-show="failure && dataLoaded">
+  <div class="row">
+    <div class="col-xs-3">
+    </div>
+    <div class="col-xs-12">
+      <div class="alert alert-danger">
+        {{message}}
+        <a href="#/quiz/{{question.questionnaire}}">
+          חזרה
+      </a>
+      </div>
+    </div>
+  </div>
+</div>

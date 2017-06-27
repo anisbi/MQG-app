@@ -290,8 +290,18 @@ input[type=text]:focus, textarea:focus, select:focus {
 	background-color: #37CA63 !important;
 }
 
+.multichoice-answer-btn-active {
+    background-color: #37CA63 !important;
+}
+
+.multichoice-answer-btn-active:focus { 
+    outline: none;
+    border: 0px solid black;
+    box-shadow: 0 0 17px #37CA63;
+}
+
 .btn-group>.btn, .btn-group-vertical>.btn {
-    margin-left: -4px !important;
+  margin-left: -4px !important;
 	float: none !important; 
 }
 
@@ -368,4 +378,9 @@ ul[dnd-list] .dndPlaceholder {
 .graph-title {
 	margin-right: 119px;
     margin-bottom: -24px;
+}
+
+.btn-multichoice-answer {
+  margin-left: 20px;
+  margin-bottom: 7px;
 }
