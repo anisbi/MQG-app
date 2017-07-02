@@ -20,7 +20,7 @@ angular.module('qmaker')
         	console.log("Failed to login.",res.data.message);
         }
         else if (res.data.result === "success") {
-          $window.location.reload();
+          $location.path('/home');
         }
       });
     };      

@@ -384,3 +384,10 @@ ul[dnd-list] .dndPlaceholder {
   margin-left: 20px;
   margin-bottom: 7px;
 }
+
+.delete-qstnr-btn {
+  border-radius: 3px;
+  text-align: center;
+  padding-right: 14px;
+  height: 33px;
+}

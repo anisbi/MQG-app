@@ -53,15 +53,53 @@ angular.module('qmaker')
 
 	};
 
-	$scope.delQuestion = function(id) {
-		var result = confirm("Are you sure you want to delete this question?");
-		if (result)
-		{
-			qstnrs.deleteQuestion($scope.qstnr.questions[id]._id);
-			$scope.qstnr.questions.splice(id,1);
-		}
+	$scope.delQuestion = function(id, index) {
+    swal({
+      title: '⸮האם את/ה בטוח/ה',
+      text: "אין להחזיר שאלה לאחר שנמחקה",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '!כן, מחק שאלון',
+      cancelButtonText : 'ביטול'
+      
+    }).then(function () {
+         $scope.sendDeleteRequest(id, index);
+    }, function (dismiss) {
+         // dismiss can be 'cancel', 'overlay',
+         // 'close', and 'timer'
+         if (dismiss === 'cancel') {
+            // in case cancel is clicked    
+         }
+    });
 	};
 
-   }
+  $scope.sendDeleteRequest = function(id, index) {
+    mqgAppData.deleteQuestion(id)
+        .success(function (response) {
+           console.log('Delete: ',response);
+           if (response.result==="success") {
+            swal(
+              'הצלחה',
+              'שאלה נמחק בהצלחה',
+              'success'
+            );
+            $scope.qstnr.questions.splice(index,1);
+           }
+           else {
+            swal(
+              'שגיאה',
+              'שגיאה במחיקת שאלון. יש לפנות לתמיכה.',
+              'error'
+            );
+           }
+         })
+             .error(function(e) {
+             console.log('error',e);
+             });
+  };
+
+ }
 
 })

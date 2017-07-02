@@ -3,8 +3,10 @@ angular.module('qmaker')
 .controller('multiChoiceCtrl', function($stateParams, $scope, $state, $timeout, $location, authentication, mqgAppData) {
 
 $scope.currentUser = authentication.currentUser();
-
 if ($state.current.name === "multi_choice") {
+	$scope.questionnaire_id = $stateParams.id;
+	$scope.qbodyequation = '';
+	$scope.qbodyEqType = 'fn';
 	//Template for new question
 	$scope.question = {
 		qtype: 'multi_choice',
@@ -37,6 +39,7 @@ if ($state.current.name === "multi_choice") {
 			}
 		}
 	};
+	$scope.qoptionsequation = $scope.question.publicdata.equations.qoptions;
 } 
 else if ($state.current.name === "edit_multi_choice") {
 	mqgAppData.getQuestion($stateParams.id)
@@ -57,6 +60,7 @@ var loadPageData = function() {
 	$scope.qbodyEqType = $scope.question.publicdata.equations.qbodyType;
 	$scope.qoptionsequation = $scope.question.publicdata.equations.qoptions;
 	$scope.answer = $scope.question.data.answer;
+	$scope.questionnaire_id = $scope.question.questionnaire.id;
 	$scope.plotError = false;
 	$timeout(function() {
 		console.log('plotting view.');
@@ -177,6 +181,7 @@ $scope.addOption = function() {
 			eqType: 'fn'
 		}
 	);
+	$scope.qoptionsequation = $scope.question.publicdata.equations.qoptions;
 }
 
 //Commit the new question to database.

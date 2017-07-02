@@ -113,8 +113,45 @@
       });
     };
 
-    
+    var getStudentsSolutions = function(qid) {
+      return $http.get('/solutions/'+qid, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
 
+    var getSingleSolution = function(sid) {
+      return $http.get('/solutions/single/'+sid, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
+    var postSolutionComment = function(sid, comment) {
+      return $http.put('/solutions/comment/'+sid, comment, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
+    var deleteQuestionnaire = function(qid) {
+      return $http.delete('/questionnaires/'+qid, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    };
+
+    var deleteQuestion = function(qid) {
+      return $http.delete('/question/'+qid, {
+        headers: {
+          Authorization: 'Bearer '+authentication.getToken()
+        }
+      });
+    }
     return {
   	  getProfile : getProfile,
       getQuestionnaires: getQuestionnaires,
@@ -128,7 +165,12 @@
       getQuizQuestion : getQuizQuestion,
       postSolution : postSolution,
       getQuizzesSolutions : getQuizzesSolutions,
-      getUserSolution : getUserSolution
+      getUserSolution : getUserSolution,
+      getStudentsSolutions : getStudentsSolutions,
+      getSingleSolution : getSingleSolution,
+      postSolutionComment : postSolutionComment,
+      deleteQuestionnaire : deleteQuestionnaire,
+      deleteQuestion : deleteQuestion
     };
 
   }

@@ -1,5 +1,18 @@
 <!--div style="direction:ltr">{{question | json}}</div-->
 <div class="container">
+  <div class="row">
+  <div class="col-xs-6 pull-right">
+    <h2>ריבוי תשובות</h2>
+    <p>יש להזין גוף שאלה, ניתן להוסיף גרף לגוף השאלה.</p>
+    <p>אח״כ יש להוסיף תשובות אפשריות, יש להוסיף הערה לעונה בתשובה זו.</p>
+  </div>
+  <div class="col-xs-6 pull-left">
+    <a href="#/questionnaires/{{questionnaire_id}}" class="btn btn-primary btn-sq-action pull-left">
+      <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+      <h5 style="margin-top: 3px;">חזרה</h5>
+    </a>
+  </div>
+</div>
  <div class="row">
   <div class="col-md-12">
    <form>
@@ -109,7 +122,7 @@
     <ol>
       <li ng-repeat="option in question.options track by $index">
         <span mathjax-bind="option.body"></span>
-        <div id="plot-{{$index}}" style="height: 250px; width:250px;" ng-hide="qoptionsequation[$index].length==0">
+        <div id="plot-{{$index}}" style="height: 250px; width:250px;" ng-hide="qoptionsequation[$index].equation.length==0">
         </div>
       </li>
     </ol>

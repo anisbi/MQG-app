@@ -1,5 +1,19 @@
 <div class="container">
 	<!--div style="direction: ltr;">{{question}}</div-->
+	<div class="row">
+		<div class="col-xs-6 pull-right">
+			<h2>התאמת כרטיסיות</h2>
+			<p>יש להזין גוף שאלה, לערוך את השמות של העמודות ולהוסיף כרטיסיות בסדר הנכון.</p>
+			<p>ניתן לגרור כרטיסיות לסדר הנכון.</p>
+			<p>על מנת למחוק כרטיסיה יש לגרור אותה אל הפח.</p>
+		</div>
+		<div class="col-xs-6 pull-left">
+			<a href="#/questionnaires/{{questionnaire_id}}" class="btn btn-primary btn-sq-action pull-left">
+        <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">חזרה</h5>
+      </a>
+		</div>
+	</div>
 	<div class="row" style="margin-bottom: 7px;">
 		<div class="col-xs-12">
 			<h3>גוף השאלה</h3>
@@ -41,10 +55,17 @@
 
 			</div> <!-- Button group -->
 
-			<button class=" btn btn-md btn-primary" ng-click="commitQuestion()">
+			<button class="btn btn-md btn-primary" ng-click="commitQuestion()">
 				<span class="glyphicon glyphicon-floppy-save" id="multi-new-option-glyph"></span>
 				<h5 class="center-block">שמור שאלה</h5>
 			</button>
+
+			<ul dnd-list="[]" class="btn btn-md btn-danger pull-left">
+				<span class="glyphicon glyphicon-trash" id="multi-new-option-glyph"></span>
+				<h5 class="center-block">מחק כרטיסיה</h5>
+      </ul>
+
+
 		</div>
 	</div>
 
@@ -70,17 +91,19 @@
 
 
 
-	<div class="row">
-
-		<div class="col-md-4 col-xs-4 col-lg-4">
+ <div class="row">
+	<div style="margin: 0 auto; width:68%;">
+    <div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
 			<div class="panel-heading list-panel-heading card-matching-list-header text-center">
 				<span ng-hide="editList3" class="pull-right glyphicon glyphicon-pencil cstm-glyph-edit" ng-click="editListName(3)"></span>
 				<span ng-show="editList3" class="pull-right glyphicon glyphicon-floppy-save cstm-glyph-edit" ng-click="editList3=false"></span>
 				<input class="text-center" ng-show="editList3" name="eqContent" type="text" ng-model="list3" focus="{{editList3}}" ng-blur="editList3=false">
-				 <span ng-hide="editList3" ng-click="editListName(3)"> {{list3}}</span>
+				<span ng-hide="editList3" ng-click="editListName(3)">
+				 	{{list3}}
+				</span>
 			</div>
-			<div class="panel-body">
-			 <ul dnd-list="models.lists.listC" style="min-height: 111px;"
+			<div class="panel-body no-padding">
+			 <ul dnd-list="models.lists.listC" style="min-height: 111px; padding-right: 0px;"
 			 	dnd-allowed-types="models.allowedTypes.listC">
 				<li ng-repeat="item in models.lists.listC"
 			        dnd-draggable="item"
@@ -95,15 +118,15 @@
 		</div>
 
 
-		<div class="col-md-4 col-xs-4 col-lg-4">
+		<div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
 			<div class="panel-heading list-panel-heading card-matching-list-header text-center">
 				<span ng-hide="editList2" class="pull-right glyphicon glyphicon-pencil cstm-glyph-edit" ng-click="editListName(2)"></span>
 				<span ng-show="editList2" class="pull-right glyphicon glyphicon-floppy-save cstm-glyph-edit" ng-click="editList2=false"></span>
 				<input class="text-center" ng-show="editList2" name="eqContent" type="text" ng-model="list2" focus="{{editList2}}" ng-blur="editList2=false">
 				 <span ng-hide="editList2" ng-click="editListName(2)"> {{list2}}</span>
 			</div>
-			<div class="panel-body">
-			 <ul dnd-list="models.lists.listB" style="min-height: 111px;"
+			<div class="panel-body no-padding">
+			 <ul dnd-list="models.lists.listB" style="min-height: 111px; padding-right: 0px;"
 			 	dnd-allowed-types="models.allowedTypes.listB">
 				<li ng-repeat="item in models.lists.listB"
 			        dnd-draggable="item"
@@ -117,15 +140,15 @@
 			</div>
 		</div>
 
-		<div class="col-md-4 col-xs-4 col-lg-4">
+		<div class="col-md-4 col-xs-4 col-lg-4 width-250 no-padding">
 			<div class="panel-heading list-panel-heading card-matching-list-header text-center">
 				<span ng-hide="editList1" class="pull-right glyphicon glyphicon-pencil cstm-glyph-edit" ng-click="editListName(1)"></span>
 				<span ng-show="editList1" class="pull-right glyphicon glyphicon-floppy-save cstm-glyph-edit" ng-click="editList1=false"></span>
 				<input class="text-center" ng-show="editList1" name="eqContent" type="text" ng-model="list1" focus="{{editList1}}" ng-blur="editList1=false">
 				 <span ng-hide="editList1" ng-click="editListName(1)"> {{list1}}</span>
 			</div>
-			<div class="panel-body">
-			 <ul dnd-list="models.lists.listA" style="min-height: 111px; padding-right: 0px;"
+			<div class="panel-body no-padding">
+			 <ul dnd-list="models.lists.listA" style="padding-right: 0px; padding-right: 0px; min-height: 111px;"
 			 	 dnd-allowed-types="models.allowedTypes.listA">
 				<li ng-repeat="item in models.lists.listA"
 			        dnd-draggable="item"
@@ -138,5 +161,6 @@
 			 </ul>
 			</div>
 		</div>
+	</div>
 	</div>
 </div>

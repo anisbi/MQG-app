@@ -5,6 +5,7 @@ angular.module('qmaker')
 $scope.currentUser = authentication.currentUser();
 
 if ($state.current.name === "open_question") {
+	$scope.questionnaire_id = $stateParams.id;
 	//Template for new question
 	$scope.question = {
 		qtype: 'open_question',
@@ -44,6 +45,7 @@ else if ($state.current.name === "edit_open_question") {
 
 var loadPageData = function() {
 	$scope.question = $scope.questionData;
+	$scope.questionnaire_id = $scope.question.questionnaire.id;
 	$timeout(function() {
 		$scope.refreshPreview();
 	}, 230);
@@ -120,13 +122,13 @@ $scope.commitQuestion = function() {
 		  });
 	}
 	else if ($state.current.name === "open_question") {	
-		mqgAppData.editQuestion($stateParams.id, $scope.question)
+		mqgAppData.newQuestion($stateParams.id, $scope.question)
 		  .success(function(response) {
-		  	$location.path('/questionnaires/' + $scope.question.questionnaire.id);
+		  	$location.path('/questionnaires/' + $stateParams.id);
 		  })
 		  .error(function (e) {
 		  	console.log('error',e);
-		  });
+  	});
 	}
 };
 

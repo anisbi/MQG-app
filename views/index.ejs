@@ -28,6 +28,11 @@
   <script src="/javascripts/openQuestionSolutionCtrl.js"></script>
   <script src="/javascripts/cardMatchingSolutionCtrl.js"></script>
   <script src="/javascripts/pairMatchingSolutionCtrl.js"></script>
+  <script src="/javascripts/studentsSolutionsCtrl.js"></script>
+  <script src="/javascripts/studentsSolutionsMultiChoiceCtrl.js"></script>
+  <script src="/javascripts/studentsSolutionsOpenQuestionCtrl.js"></script>
+  <script src="/javascripts/studentsSolutionsCardMatchingCtrl.js"></script>
+  <script src="/javascripts/studentsSolutionsPairMatchingCtrl.js"></script>
  	<script type="text/x-mathjax-config">
   		MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 	</script>
@@ -55,19 +60,26 @@
 	  	<div class="container-fluid">
 	  		<div class="navbar-header pull-right">
 	  			
-	  			<a class="navbar-brand" href="#">
+	  			<a class="navbar-brand" href="#/home">
 	  				<span class="glyphicon glyphicon-home" id="navglyph"></span>
 	  			</a>
 	  		</div>
 
 	  		<ul class="nav navbar-nav navbar-right">
-			  <li ng-hide="{{isLoggedIn}}"><a ng-href="#/login">Sign in</a></li>
 			  <li ng-show="{{isLoggedIn}}"><a ng-href="#/profile">{{ currentUser.name }}</a></li>
 			</ul>
+      <a ng-show="{{isLoggedIn}}" class="pull-left" href="#/logout">
+      <span class="glyphicon glyphicon-log-out" style="margin: 12px 16px;font-size: 26px;"></span>
+	  	</a>
+      <a ng-hide="{{isLoggedIn}}" class="pull-left" href="#/login">
+      <span class="glyphicon glyphicon-log-in" style="margin: 12px 16px;font-size: 26px;"></span>
+      </a>
+      </div>
 
-	  	</div>
+      </nav>
+      
 
-	  </nav>
+	  
 	  <!--
 	  <div class="row">
 	   <div class="col-md-12">

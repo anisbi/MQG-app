@@ -1,39 +1,35 @@
 angular.module('qmaker')
 
-.controller('pairMatchingSolutionCtrl', function($stateParams, $scope, $state, $timeout, $location, authentication, mqgAppData) {
-
-  $scope.currentUser = authentication.currentUser();
-  $scope.failure = true;
+.controller('studentsSolutionsPairMatchingCtrl', function($stateParams, $scope, $location, $timeout, authentication, mqgAppData) {
+  $scope.questionnaire_id = $stateParams.questionnaire_id;
   $scope.dataLoaded = false;
-  mqgAppData.getUserSolution("open_question", $stateParams.question_id)
-     .success(function (data) {
+  $scope.failure = false;
+  mqgAppData.getSingleSolution($stateParams.solution_id)
+      .success(function (response) {
 
-      if (data.result === "failure") {
-        $scope.failure = true;
-        $scope.message = data.message;
+        if (response.result === "failure") {
+          $scope.failure = true;
+          $scope.message = response.message;
+        }
+        else if (response.result === "success") {
+          $scope.solutionData = response.data;
+          loadPageData();
+        }
         $scope.dataLoaded = true;
-        $scope.questionnaire_id = $stateParams.questionnaire_id;
-        return;
-      }
-      else if (data.result === "success") {
-        $scope.failure = false;
-        $scope.solutionData = data.data;
-        loadPageData();
-        $scope.plotView();
-        $scope.dataLoaded = true;
-      }
-     })
-     .error(function(e) {
-      console.log('error',e);
-     });
+      })
+
+          .error(function(e) {
+            $scope.dataLoaded = true;
+            console.log('error',e);
+          });
 
   var loadPageData = function() {
     $scope.question = $scope.solutionData.question;
-    $scope.solution = $scope.solutionData.solution[0];
+    $scope.solution = $scope.solutionData.solution;
 
     $scope.qbody = $scope.question.publicdata.qbody;
-    $scope.list1 = $scope.question.publicdata.listNameA;
-    $scope.list2 = $scope.question.publicdata.listNameB;
+    $scope.list1 = $scope.question.publicdata.listName1;
+    $scope.list2 = $scope.question.publicdata.listName2;
 
     $scope.teacherComment = $scope.solution.data.comment;
 
@@ -55,6 +51,7 @@ angular.module('qmaker')
     $timeout(function() {
       $scope.plotView();
     }, 230);
+
   };
 
   $scope.plotView = function() {
@@ -218,6 +215,20 @@ angular.module('qmaker')
                }
           }
       }
-     } //End of plotView()  
+    }; //End of plotView() 
+
+
+    $scope.sendComment = function() {
+      var comment = {
+        "comment" : $scope.teacherComment
+      };
+      mqgAppData.postSolutionComment($stateParams.solution_id, comment)
+          .success(function (response) {
+            $location.path('/students_solutions/' + $scope.questionnaire_id + '/' + $scope.question._id);
+          })
+              .error(function(e) {
+                console.log('error',e);
+              });
+    };
 
 })

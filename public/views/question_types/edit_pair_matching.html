@@ -1,10 +1,32 @@
-<div style="direction:ltr;">{{models | json}}<br><hr><br>
-<div style="direction:ltr;">{{question | json}}<br><hr><br>
+<!--div style="direction:ltr;">{{models | json}}<br><hr><br>
+<div style="direction:ltr;">{{question | json}}<br><hr><br-->
 <div class="custom-container">
+
+<div class="row">
+	<div class="col-xs-6 pull-right">
+		<h2>התאמת זוגות</h2>
+		<p>יש להזין גוף שאלה, לערוך את השמות של העמודות ולהוסיף כרטיסיות בסדר הנכון.</p>
+		<p>ניתן לגרור כרטיסיות לסדר הנכון.</p>
+		<p>על מנת למחוק כרטיסיה יש לגרור אותה אל הפח.</p>
+	</div>
+	<div class="col-xs-6 pull-left">
+		<a href="#/questionnaires/{{questionnaire_id}}" class="btn btn-primary btn-sq-action pull-left">
+      <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+      <h5 style="margin-top: 3px;">חזרה</h5>
+    </a>
+	</div>
+</div>
+<div class="row" style="margin-bottom: 7px;">
+	<div class="col-xs-12">
+		<h3>גוף השאלה</h3>
+
+		<textarea rows="5" id="question-body" ng-model="qbody" placeholder="הזן כאן גוף השאלה"></textarea>
+	</div>
+</div>
 
 <div class="row" style="margin-bottom: 23px;">
 	<div class="col-md-12 col-xs-12">
-	<div class="btn-group custom-btn-group" role="group">
+	<div class="btn-group custom-btn-group pull-right" role="group">
 	 <button ng-class="{'cstm-btn-active': addListItemActive == true}" class="btn btn-md btn-primary" ng-click="addListItem()">
 	  <span class="glyphicon glyphicon-plus" id="multi-new-option-glyph"></span>
 	  <h5 class="center-block" >הוסף כרטיסיה</h5>
@@ -12,12 +34,12 @@
 
 	 <button ng-class="{'cstm-btn-active': addToList == 1}" ng-show="listChoice" class="btn btn-md btn-primary" ng-click="setList(1)">
 	  <span class="glyphicon glyphicon-list" id="multi-new-option-glyph"></span>
-	  <h5 class="center-block" >List A</h5>
+	  <h5 class="center-block" >{{list1}}</h5>
 	 </button>
 
 	 <button ng-class="{'cstm-btn-active': addToList == 2}" ng-show="listChoice" class="btn btn-md btn-primary" ng-click="setList(2)">
 	  <span class="glyphicon glyphicon-list" id="multi-new-option-glyph"></span>
-	  <h5 class="center-block" >List B</h5>
+	  <h5 class="center-block" >{{list2}}</h5>
 	 </button>
 
 	 <button ng-class="{'cstm-btn-active': listItemType == 1}" ng-show="listType" class="btn btn-md btn-primary" ng-click="setType(1)">
@@ -34,6 +56,10 @@
 	  <span class="glyphicon glyphicon-floppy-save" id="multi-new-option-glyph"></span>
 	  <h5 class="center-block">שמור שאלה</h5>
 	 </button>
+	 <ul dnd-list="[]" class="btn btn-md btn-danger pull-left">
+		<span class="glyphicon glyphicon-trash" id="multi-new-option-glyph"></span>
+		<h5 class="center-block">מחק כרטיסיה</h5>
+  </ul>
 	</div>
 </div>
 <div class="row">
@@ -57,56 +83,50 @@
 </div>
 
  <div class="row">
-	<div class="col-md-6 col-xs-6">
-		<div class="panel-heading list-panel-heading">
-			List A
+ <div style="margin: 0 auto; width:39%;">
+	<div class="col-md-6 col-xs-6  width-250 no-padding">
+		<div class="panel-heading list-panel-heading card-matching-list-header text-center">
+			<span ng-hide="editList1" class="pull-right glyphicon glyphicon-pencil cstm-glyph-edit" ng-click="editListName(1)"></span>
+			<span ng-show="editList1" class="pull-right glyphicon glyphicon-floppy-save cstm-glyph-edit" ng-click="editList3=false"></span>
+			<input class="text-center" ng-show="editList1" name="eqContent" type="text" ng-model="list1" focus="{{editList1}}" ng-blur="editList1=false">
+			 <span ng-hide="editList1" ng-click="editListName(1)">{{list1}}</span>
 		</div>
-		<div class="panel-body">
-			<ul dnd-list="models.lists.A" style="min-height: 111px;">
+		<div class="panel-body no-padding">
+			<ul dnd-list="models.lists.A" style="min-height: 111px; padding-right: 0px;">
 				<li ng-repeat="item in models.lists.A"
 			        dnd-draggable="item"
 			        dnd-moved="models.lists.A.splice($index, 1)"
 			        dnd-effect-allowed="move" 
-			        class="center-block text-center">
-				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+			        class="center-block text-center cstm-draggable-card">
+				        <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
 				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-A-{{$index}}" style="height: 250px; width:250px;"></div>
 	    		</li>
 			</ul>
 		</div>
 	</div>	
-	<div class="col-md-6 col-xs-6">
-		<div class="panel-heading">List B</div>
-		<div class="panel-body">
-			<ul dnd-list="models.lists.B" style="min-height: 111px;">
+	<div class="col-md-6 col-xs-6  width-250 no-padding">
+		<div class="panel-heading list-panel-heading card-matching-list-header text-center">
+			<span ng-hide="editList2" class="pull-right glyphicon glyphicon-pencil cstm-glyph-edit" ng-click="editListName(2)"></span>
+			<span ng-show="editList2" class="pull-right glyphicon glyphicon-floppy-save cstm-glyph-edit" ng-click="editList3=false"></span>
+			<input class="text-center" ng-show="editList2" name="eqContent" type="text" ng-model="list2" focus="{{editList2}}" ng-blur="editList2=false">
+			 <span ng-hide="editList2" ng-click="editListName(2)">{{list2}}</span>
+		</div>
+		<div class="panel-body no-padding">
+			<ul dnd-list="models.lists.B" style="min-height: 111px; padding-right: 0px;">
 				<li ng-repeat="item in models.lists.B"
 			        dnd-draggable="item"
 			        dnd-moved="models.lists.B.splice($index, 1)"
 			        dnd-effect-allowed="move" 
-			        class="center-block text-center">
-				        <span class="center-block" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
+			        class="center-block text-center cstm-draggable-card">
+				        <span class="center-block cstm-card-mathjax" ng-show="item.type == 'text'" mathjax-bind="item.data.content"></span>
 				        <div class="center-block text-center" ng-show="item.type == 'function'" id="plot-B-{{$index}}" style="height: 250px; width:250px;"></div>
 	    		</li>
 			</ul>
 		</div>
 	</div>
+  </div>
  </div>
 </div>
-</div>
 
 
-<div class="row">
-	<div ng-repeat="(listName, list) in models.lists" class="col-md-6">
-		<ul dnd-list="list">
-			<li ng-repeat="item in list"
-		        dnd-draggable="item"
-		        dnd-moved="list.splice($index, 1)"
-		        dnd-effect-allowed="move"
-		        dnd-selected="models.selected = item"
-		        ng-class="{'selected': models.selected === item}">
-		        <span ng-show="item.type == 'text'" mathjax-bind="item.label"></span>
-		        <div ng-show="item.type == 'function'" id="plot-{{listName}}-{{$index}}" style="height: 250px; width:250px;"></div>
-    		</li>
-		</ul>
-	<div>
-</div>
 

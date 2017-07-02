@@ -42,6 +42,20 @@ app.run(
         $location.path('/login');
         $state.go('login');
       }
+      else if ($location.path() === '/home' && authentication.isLoggedIn() &&
+          authentication.currentUser().payload.type == "student") {
+        event.preventDefault();
+        $location.path('/home/student');
+        $state.go('homeStudent');
+      }
+
+      else if ($location.path() === '/' && authentication.isLoggedIn() &&
+          authentication.currentUser().payload.type == "student") {
+        event.preventDefault();
+        $location.path('/home/student');
+        $state.go('homeStudent');
+      }
+      
     });
   }
 );
@@ -67,11 +81,17 @@ function($stateProvider, $urlRouterProvider) {
 	$stateProvider
 	 
 
-	 .state('home', {
-	 	url: '/home',
-	 	templateUrl: '/views/home.html',
-	 	controller: 'homeCtrl'
+	 .state('homeStudent', {
+	 	url: '/home/student',
+	 	templateUrl: '/views/homeStudent.html',
+	 	controller: 'homeStudentCtrl'
 	 })
+
+   .state('home', {
+    url: '/home',
+    templateUrl: '/views/home.html',
+    controller: 'homeCtrl'
+   })
 
 /*
 	$stateProvider
@@ -229,6 +249,35 @@ function($stateProvider, $urlRouterProvider) {
     controller: 'pairMatchingSolutionCtrl'
    })
 
+   .state('students_solutions_multi_choice', {
+    url: '/students_solutions/{questionnaire_id}/{solution_id}/multi_choice',
+    templateUrl: '/views/students_solutions_multi_choice.html',
+    controller: 'studentsSolutionsMultiChoiceCtrl'
+   })
+
+   .state('students_solutions_open_question', {
+    url: '/students_solutions/{questionnaire_id}/{solution_id}/open_question',
+    templateUrl: '/views/students_solutions_open_question.html',
+    controller: 'studentsSolutionsOpenQuestionCtrl'
+   })
+
+   .state('students_solutions_card_matching', {
+    url: '/students_solutions/{questionnaire_id}/{solution_id}/card_matching',
+    templateUrl: '/views/students_solutions_card_matching.html',
+    controller: 'studentsSolutionsCardMatchingCtrl'
+   })
+
+   .state('students_solutions_pair_matching', {
+    url: '/students_solutions/{questionnaire_id}/{solution_id}/pair_matching',
+    templateUrl: '/views/students_solutions_pair_matching.html',
+    controller: 'studentsSolutionsPairMatchingCtrl'
+   })
+
+   .state('students_solutions', {
+    url: '/students_solutions/{questionnaire_id}/{question_id}',
+    templateUrl: '/views/students_solutions.html',
+    controller: 'studentsSolutionsCtrl'
+   })
 
 	 .state('registerTeacher', {
 	 	url: '/register/teacher',
@@ -261,11 +310,13 @@ function($stateProvider, $urlRouterProvider) {
 	 })
 
 	 //$urlRouterProvider.otherwise('home');
-	 $urlRouterProvider.otherwise(function($injector, $location){
+	 /*
+   $urlRouterProvider.otherwise(function($injector, $location){
 	 	$injector.invoke(['$state', function($state) {
 	 		$state.go('home');
 	 	}]);
 	 });
+*/
 });
 
 

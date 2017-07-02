@@ -2,6 +2,19 @@
  {{question | json}}
 </div-->
 <div class="container">
+  <div class="row">
+    <div class="col-xs-6 pull-right">
+      <h2>שאלה פתוחה</h2>
+      <p>יש להזין גוף שאלה.</p>
+      <p>ניתן להוסיף גרפים של פונקציות.</p>
+    </div>
+    <div class="col-xs-6 pull-left">
+      <a href="#/questionnaires/{{questionnaire_id}}" class="btn btn-primary btn-sq-action pull-left">
+        <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">חזרה</h5>
+      </a>
+    </div>
+  </div>
 	<div class="row">
 		<div class="col-xs-12">
 			<form>
@@ -76,8 +89,8 @@
 			<h4>
 				<span mathjax-bind="question.body"></span>
 			</h4>
-			<h4>גרפים</h4>
-			<div class="graphs-preview" ng-repeat="equation in question.publicdata.equations.equationsArray track by $index" for="{{equation}}" style="display: inline;">
+			<h4 ng-hide="question.publicdata.equations.equationsArray[0].equation.length==0">גרפים</h4>
+			<div ng-hide="question.publicdata.equations.equationsArray[0].equation.length==0" class="graphs-preview" ng-repeat="equation in question.publicdata.equations.equationsArray track by $index" for="{{equation}}" style="display: inline;">
 				<div class="graph-title"><h3>{{equation.equationComment}}</h3></div>
 				<div id="plot-{{$index}}" style="height: 250px; width:250px;"></div>
 			</div> 

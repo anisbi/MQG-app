@@ -1,0 +1,74 @@
+<!--div style="direction: ltr;">
+  {{solutions | json}}
+</div-->
+
+<div class="container" ng-hide="failure">
+
+  <div class="row" style="margin-bottom: 23px;">
+    <div class="col-xs-12">
+      <a href="#/questionnaires/{{questionnaire_id}}" class="btn btn-primary btn-sq-action pull-left">
+      <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+      <h5 style="margin-top: 3px;">חזרה</h5>
+    </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-hover table-striped table-bordered text-right">
+        <thead>
+          <tr>
+            <th class="text-right">
+              #
+            </th>
+            <th class="text-right">
+              פתרון ע״י
+            </th>
+            <th class="text-right">
+              תאריך פתרון
+            </th>
+            <th class="text-right">
+              פעולה
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="sol in solutions track by $index">
+            <td>
+              {{$index+1}}
+            </td>
+            <td>
+              {{sol.solver.name}}
+            </td>
+            <td>
+              {{solutionDates[$index]}}
+            </td>
+            <td>
+              <a href="#/students_solutions/{{questionnaire_id}}/{{sol._id}}/{{sol.question.qtype}}" class="btn btn-default">
+                צפייה
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="container" ng-show="failure && dataLoaded">
+  <div class="row">
+    <div class="col-xs-3">
+    </div>
+    <div class="col-xs-12">
+      <div class="alert alert-danger">
+        {{message}}
+        <a href="#/questionnaires/{{questionnaire_id}}">
+          חזרה
+      </a>
+      </div>
+    </div>
+  </div>
+</div>

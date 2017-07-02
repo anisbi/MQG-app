@@ -46,7 +46,8 @@
       	return {
           id : payload._id,
       	  email : payload.email,
-      	  name : payload.name
+      	  name : payload.name,
+          payload : payload
       	};
       }
     };

@@ -94,5 +94,62 @@ else {
  	}
  }
 
+	
+
+	$scope.delQuestionnaire = function(index) {
+    swal({
+      title: '⸮האם את/ה בטוח/ה',
+      text: "כל השאלות ימחקו ןאי אפשר להחזירם.",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '!כן, מחק שאלון',
+      cancelButtonText : 'ביטול'
+      
+    }).then(function () {
+         $scope.sendDeleteRequest(index);
+    }, function (dismiss) {
+           // dismiss can be 'cancel', 'overlay',
+           // 'close', and 'timer'
+           if (dismiss === 'cancel') {
+              // in case cancel is clicked
+             
+           }
+      });
+	};
+
+	$scope.sendDeleteRequest = function(index) { 
+		var id = $scope.qstnrs[index]._id;
+		mqgAppData.deleteQuestionnaire(id)
+			  .success(function (response) {
+			     console.log('Delete: ',response);
+			     if (response.result==="success") {
+			     	swal(
+						  'הצלחה',
+						  'שאלון נמחק בהצלחה',
+						  'success'
+						);
+						$scope.qstnrs.splice(index,1);
+						$scope.filteredQstnrs.splice(index,1);
+			     }
+			     else {
+			     	swal(
+						  'שגיאה',
+						  'שגיאה במחיקת שאלון. יש לפנות לתמיכה.',
+						  'error'
+						);
+			     }
+			   })
+					   .error(function(e) {
+					 	 console.log('error',e);
+					   });
+		//console.log($scope.qstnrs[index]._id);
+	};
+
+
+})
+
+.controller('homeStudentCtrl', function($scope, $location, authentication, mqgAppData) {
 
 })

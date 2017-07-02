@@ -1,6 +1,6 @@
 angular.module('qmaker')
 
-.controller('solveCardMatchingCtrl', function($scope, $stateParams, $timeout, authentication, mqgAppData) {
+.controller('solveCardMatchingCtrl', function($scope, $stateParams, $location, $timeout, authentication, mqgAppData) {
 	$scope.currentUser = authentication.currentUser();
   $scope.failure = true;
   mqgAppData.getQuizQuestion("card_matching", $stateParams.question_id)
@@ -84,7 +84,7 @@ angular.module('qmaker')
     };
     mqgAppData.postSolution(dataToSend)
      .success(function (data) {
-       console.log("After posting answer:",data);
+        $location.path('/quiz/' + $scope.question.questionnaire);
      })
      .error(function(e) {
       console.log('error',e);

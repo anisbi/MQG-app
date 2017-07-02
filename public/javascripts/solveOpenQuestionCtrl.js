@@ -1,6 +1,6 @@
 angular.module('qmaker')
 
-.controller('solveOpenQuestionCtrl', function($scope, $stateParams, $timeout, authentication, mqgAppData) {
+.controller('solveOpenQuestionCtrl', function($scope, $stateParams, $location, $timeout, authentication, mqgAppData) {
   $scope.currentUser = authentication.currentUser();
 
   $scope.failure = true;
@@ -72,11 +72,13 @@ angular.module('qmaker')
           "name" : $scope.question.author.name
         }
       },
-      "data": $scope.answerBody
+      "data": {
+        "answer" : $scope.answerBody
+      }
     };
     mqgAppData.postSolution(dataToSend)
      .success(function (data) {
-       console.log("After posting answer:",data);
+        $location.path('/quiz/' + $scope.question.questionnaire);
      })
      .error(function(e) {
       console.log('error',e);

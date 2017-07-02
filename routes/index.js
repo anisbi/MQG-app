@@ -266,6 +266,42 @@ module.exports.saveQuestion = function(req, res) {
 };
 router.post('/questionnaires/:questionnaire/questions', auth, this.verifyUser, this.saveQuestion);
 
+module.exports.deleteQuestionnaire = function(req, res) {
+	if (req.status.result === "success" &&
+					req.questionnaire.author.id == req.user._id) {
+
+		req.questionnaire.remove(function(err){
+			if (err) {
+				res.status(500).json({
+					"result" : "error",
+					"message" : err
+				});
+			}
+			else {
+				res.json({
+					"result" : "success",
+					"message" : "Questionnaire successfuly deleted"
+				});
+			}
+		});
+
+  }
+  else if (req.status.result === "failure") {
+		res.json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+  }
+  else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+};
+router.delete('/questionnaires/:questionnaire', auth, this.verifyUser, this.deleteQuestionnaire);
+
+
 module.exports.getQuestion = function(req, res) {
   if (req.status.result === "success" &&
   		req.question.author.id === req.payload._id) {
@@ -285,6 +321,7 @@ module.exports.getQuestion = function(req, res) {
 router.get('/question/:question', auth, this.verifyUser, this.getQuestion);
 
 module.exports.editQuestion = function(req, res) {
+
   if (req.status.result === "success" &&
   		req.question.author.id === req.payload._id) {
 
@@ -519,6 +556,11 @@ module.exports.returnQuizQuestion = function(req, res) {
 					"A" : shuffledA,
 					"B" : shuffledB
 				},
+				"publicdata" : {
+					"qbody" : req.question.publicdata.qbody,
+					"listName1" : req.question.publicdata.listNameA,
+					"listName2" : req.question.publicdata.listNameB
+				},
 				"questionnaire" : req.question.questionnaire.id
 			};
 			res.json({
@@ -629,8 +671,7 @@ module.exports.returnQuizQuestion = function(req, res) {
 	else if (req.status.result === "failure") {
 		res.json({
 			"result" : "failure",
-			"message" : req.status.message,
-			"alt" : req.status
+			"message" : req.status.message
 		});
 	}
 	else if (req.status.result === "error") {
@@ -815,6 +856,101 @@ module.exports.returnSolvedQuizzes = function(req, res) {
 };
 router.get('/solutions', auth, this.verifyUser, this.returnSolvedQuizzes);
 
+module.exports.returnSingleSolution = function(req, res) {
+	if (req.user.type !== "teacher") {
+    res.status(401).json({
+      "result" : "failure",
+      "message" : "Unauthorized Access."
+	 	});
+  }
+  else {
+  	Solution.findById(req.params.solution_id)
+  			.exec(function (err, solution) {
+
+					if (err) {
+						res.status(500).json({
+							"result" : "error",
+							"message" : err
+						});
+					}
+
+					else {
+						req.solution = solution;
+						Question.findById(solution.question.id)
+								.exec(function(err, question) {
+									if (err) {
+										res.status(500).json({
+											"result" : "error",
+											"message" : err
+										});
+									}
+									else {
+										res.json({
+											"result" : "success",
+											"data" : {
+												"question" : question,
+												"solution" : req.solution
+											}
+										})
+									}
+								});
+					}
+
+			});
+  }
+};
+router.get('/solutions/single/:solution_id', auth, this.verifyUser, this.returnSingleSolution);
+
+module.exports.postTeacherComment = function(req, res) {
+
+	if (req.status.result === "success" &&
+			req.solution.question.author.id == req.user._id) {
+		
+/*
+		res.json({
+			"auth_id" : req.solution.question.author.id,
+			"req.id" : req.user._id,
+			"req.body" : req.body,
+			"req.status" : req.status,
+			"req.solution" : req.solution
+		});
+		return;
+
+*/
+		req.solution.data.comment = req.body.comment;
+		req.solution.markModified('data');
+		req.solution.save(function(err, solution) {
+			if (err) { 
+				res.status(500).json({
+					"result" : "error",
+					"message" : err
+				});
+			}
+			else {
+				res.status(200).json({
+					"result" : "success",
+					"data" : solution
+				});
+			}
+		});
+	}
+
+	else if (req.status.result === "failure") {
+		res.json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+  
+};
+router.put('/solutions/comment/:solution', auth, this.verifyUser, this.postTeacherComment);
+
 module.exports.verifyQuizSolution = function(req, res, next) {
 	Solution.find({
 		"solver.id" : req.user._id+"",
@@ -942,16 +1078,105 @@ router.get('/solutions', function(req, res, next) {
 
 
 
+module.exports.returnStudentsSolutions = function(req, res) {
+	if (req.status.result === "success") {
+		if (req.user.type !== "teacher") {
+	    res.status(401).json({
+	      "result" : "failure",
+	      "message" : "Unauthorized Access."
+		 	});
+	  }
+	  else {
+	  	Solution.find({
+					"question.id" : req.question._id+""
+				}).exec(function (err, solutions) {
+
+						if (err) {
+							res.status(500).json({
+								"result" : "error",
+								"message" : err
+							});
+						}
+
+						else {
+							res.json({
+								"result" : "success",
+								"data" : solutions
+							})
+						}
+
+				});
+	  }
+	}
+  else if (req.status.result === "failure") {
+		res.json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+};
+
+router.get('/solutions/:question', auth, this.verifyUser, this.returnStudentsSolutions);
+
+module.exports.deleteQuestion = function(req, res) {
+	if (req.status.result==="success") {
+		req.question.remove(function(err) {
+			if (err) {
+				res.status(500).json({
+					"result" : "error",
+					"message" : err
+				});
+			}
+			else {
+				Questionnaire.update(
+
+				{_id: req.question.questionnaire.id},
+				{$pull: {"questions" : req.question._id}},
+				{upsert: true},
+				function(err) {
+					if (err) { 
+						res.status(500).json({
+							"result" : "error",
+							"message" : err
+						});
+					}
+					else {
+						res.json({
+							"result" : "success",
+							"message" : "question successfuly deleted"
+						});
+					}
+						
+				});
+			}
+		});
+	}
+	else if (req.status.result === "failure") {
+		res.json({
+			"result" : "failure",
+			"message" : req.status.message
+		});
+	}
+	else if (req.status.result === "error") {
+		res.status(500).json({
+			"result" : "error",
+			"message" : req.status.message
+		});
+	}
+};
+router.delete('/question/:question', auth, this.verifyUser, this.deleteQuestion);
 
 
+/*Delete a question
+router.('/question/:question', function(req, res, next) {
 
-
-
-
-//Delete a question
-router.delete('/question/:question', function(req, res, next) {
-
-	/* Must add authentication in the future!! */
+	/* Must add authentication in the future!! 
 
 	Question.findById(req.question._id, function(err, question) {
 		if (err) { return next(err); }
@@ -973,6 +1198,7 @@ router.delete('/question/:question', function(req, res, next) {
 		});
 	});
 });
+*/
 
 //Get a question in quiz form (excluding private data)
 router.get('/quiz/question/:quiz', function(req, res, next) {

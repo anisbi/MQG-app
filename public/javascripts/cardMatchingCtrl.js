@@ -11,11 +11,14 @@ if ($state.current.name === "edit_card_matching") {
 	.success(function (response) {
 	  if (response.result === "success") {
 	    $scope.questionData = response.data;
+	    $scope.questionnaire_id = $scope.questionData.questionnaire.id;
 	    loadViewData();
 	  }
 	});
 }
 else {
+
+	$scope.questionnaire_id = $stateParams.id;
 	$scope.list1 = "רשימה 1";
 	$scope.list2 = "רשימה 2";
 	$scope.list3 = "רשימה 3";
@@ -195,7 +198,7 @@ $scope.plotView = function() {
 							height: 250,
 					  		target: '#plot-A-'+i,
 					  		data: [{
-					    		fn: $scope.models.lists.A[i].data.fnContent,
+					    		fn: item.data.fnContent,
 					    		fnType: 'implicit'
 					  		}]
 						});

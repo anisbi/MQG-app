@@ -1,30 +1,32 @@
 angular.module('qmaker')
 
-.controller('cardMatchingSolutionCtrl', function($scope, $stateParams, $timeout, $state, authentication, mqgAppData) {
-  $scope.currentUser = authentication.currentUser();
-  $scope.failure = true;
-  mqgAppData.getUserSolution("multi_choice", $stateParams.question_id)
-      .success(function (data) {
+.controller('studentsSolutionsCardMatchingCtrl', function($stateParams, $scope, $location, $timeout, authentication, mqgAppData) {
+  $scope.questionnaire_id = $stateParams.questionnaire_id;
+  $scope.dataLoaded = false;
+  $scope.failure = false;
+  mqgAppData.getSingleSolution($stateParams.solution_id)
+      .success(function (response) {
 
-        if (data.result === "failure") {
+        if (response.result === "failure") {
           $scope.failure = true;
-          $scope.message = data.message;
-          return;
+          $scope.message = response.message;
         }
-        else if (data.result === "success") {
-          $scope.failure = false;
-          $scope.solutionData = data.data;
+        else if (response.result === "success") {
+          $scope.solutionData = response.data;
           loadPageData();
-          $scope.plotView();
         }
+        $scope.dataLoaded = true;
       })
+
           .error(function(e) {
+            $scope.dataLoaded = true;
             console.log('error',e);
           });
 
+
   var loadPageData = function() {
     $scope.question = $scope.solutionData.question;
-    $scope.solution = $scope.solutionData.solution[0];
+    $scope.solution = $scope.solutionData.solution;
 
     $scope.teacherComment = $scope.solution.data.comment;
 
@@ -58,12 +60,12 @@ angular.module('qmaker')
     var d = new Date($scope.solution.createdon);
     $scope.solutionDate = d.toLocaleDateString()+' '+d.toTimeString().substring(0, d.toTimeString().indexOf("GMT"));
 
-    $scope.plotError = false;
     $timeout(function() {
       console.log('plotting view.');
       $scope.plotView();
     }, 230);
   };
+
 
   $scope.plotView = function() {
     if ($scope.failure) return;
@@ -341,4 +343,19 @@ angular.module('qmaker')
       }
     }
   }
+
+  $scope.sendComment = function() {
+    var comment = {
+      "comment" : $scope.teacherComment
+    };
+    mqgAppData.postSolutionComment($stateParams.solution_id, comment)
+        .success(function (response) {
+          console.log('redirect to: /quiz/' + $scope.questionnaire_id + '/' + $scope.question._id);
+          $location.path('/students_solutions/' + $scope.questionnaire_id + '/' + $scope.question._id);
+        })
+            .error(function(e) {
+              console.log('error',e);
+            });
+  };
+
 })

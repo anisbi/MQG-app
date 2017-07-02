@@ -1,17 +1,23 @@
 angular.module('qmaker')
 
-.controller('solvePairMatchingCtrl', function($scope, $stateParams, $timeout, authentication, mqgAppData) {
+.controller('solvePairMatchingCtrl', function($scope, $stateParams, $location, $timeout, authentication, mqgAppData) {
   $scope.currentUser = authentication.currentUser();
 
+  $scope.failure = true;
   $scope.dataLoaded = false;
 	mqgAppData.getQuizQuestion("pair_matching", $stateParams.question_id)
      .success(function (data) {
       if (data.result === "failure") {
-        $scope.failure = true;
+        /*$scope.failure = true;
         $scope.dataLoaded = true;
         $scope.message = data.message;
         $scope.question = {"questionnaire" : $stateParams.questionnaire_id};
-        return;
+        */
+
+        $scope.failure = true;
+        $scope.message = data.message;
+        $scope.question = {"questionnaire" : $stateParams.questionnaire_id};
+        $scope.dataLoaded = true; return false;
       }
       else if (data.result === "success") {
         $scope.failure = false;
@@ -19,6 +25,7 @@ angular.module('qmaker')
         $scope.receivedQuizzes = data;
         loadPageData();
       }
+      $scope.dataLoaded = true;
      	
      })
      .error(function(e) {
@@ -27,6 +34,11 @@ angular.module('qmaker')
 
      var loadPageData = function() {
      	$scope.data = $scope.question = $scope.receivedQuizzes.data;
+
+      $scope.qbody = $scope.question.publicdata.qbody;
+      $scope.list1 = $scope.question.publicdata.listName1;
+      $scope.list2 = $scope.question.publicdata.listName2;
+      
       $scope.models = {
          lists: {"A": [], "B": []}
       };
@@ -80,7 +92,7 @@ angular.module('qmaker')
       };
       mqgAppData.postSolution(dataToSend)
        .success(function (data) {
-         console.log("After posting answer:",data);
+          $location.path('/quiz/' + $scope.question.questionnaire);
        })
        .error(function(e) {
         console.log('error',e);
@@ -96,6 +108,7 @@ angular.module('qmaker')
      }, true);
 
      $scope.plotView = function() {
+      if ($scope.failure) return;
       for (var i = 0; i < $scope.models.lists.A.length; i++) {
           if ($scope.models.lists.A[i].type == "function") {
                if ($scope.models.lists.A[i].data.fnType == 'fn') {

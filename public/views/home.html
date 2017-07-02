@@ -1,4 +1,4 @@
-<span style="direction: ltr;">{{questionnaires | json }}</span>
+
 
 <div class="home-container">
 	<div class="row">
@@ -83,7 +83,7 @@
 					</th>
 				</thead>
 				<tbody>
-					<tr ng-repeat="qstnr in filteredQstnrs">
+					<tr ng-repeat="qstnr in filteredQstnrs track by $index">
 						<td>
 							{{qstnr.title}}
 						</td>
@@ -98,6 +98,9 @@
 							<a href="#/questionnaires/{{qstnr._id}}" class="btn btn-primary">	
 								עריכה
 							</a>
+							<button class="btn btn-md btn-danger delete-qstnr-btn" ng-click="delQuestionnaire($index)">
+								<span class="glyphicon glyphicon-trash"></span>
+							</button>
 							<!--/button-->
 						</td>
 					</tr>

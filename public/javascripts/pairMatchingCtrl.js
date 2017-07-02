@@ -4,6 +4,12 @@ angular.module('qmaker')
 .controller('pairMatchingCtrl', function($stateParams, $scope, $location, authentication, mqgAppData, $timeout) {
 	$scope.currentUser = authentication.currentUser();
 
+	$scope.qbody = "";
+	$scope.list1 = "רשימה 1";
+	$scope.list2 = "רשימה 2";
+
+	$scope.questionnaire_id = $stateParams.id;
+
 	//Template for new question
 	$scope.question = {
 		qtype: 'pair_matching',
@@ -16,9 +22,23 @@ angular.module('qmaker')
 		},
 		publicdata:
 		{
-			qbody: ''
+			qbody: '',
+			listNameA: '',
+			listNameB: ''
 		}
 	};
+
+	$scope.editList1 = $scope.editList2 = false;
+	$scope.editListName = function(index) {
+		if (index > 0 && index < 3) {
+			if (index === 1) {
+				$scope.editList1 = true;
+			}
+			else if (index === 2) {
+				$scope.editList2 = true;
+			}
+		}
+	}
 
 	$scope.resetControls = function() {
 		$scope.listType = false;
@@ -203,9 +223,11 @@ angular.module('qmaker')
 	} //End of plotView()
 
 	$scope.commitQuestion = function() {
-		//TODO: save to DB.
 		$scope.question.data.lists.A = $scope.models.lists.A;
 		$scope.question.data.lists.B = $scope.models.lists.B;
+		$scope.question.publicdata.qbody = $scope.qbody;
+		$scope.question.publicdata.listNameA = $scope.list1;
+		$scope.question.publicdata.listNameB = $scope.list2;
 
 		mqgAppData.newQuestion($stateParams.id, $scope.question)
 		  .success(function(response) {
@@ -238,6 +260,14 @@ angular.module('qmaker')
 
 	var loadPageData = function() {
 		$scope.question = $scope.questionData;
+
+		$scope.questionnaire_id = $scope.question.questionnaire.id;
+
+		$scope.qbody = $scope.question.publicdata.qbody;
+		$scope.list1 = $scope.question.publicdata.listNameA;
+		$scope.list2 = $scope.question.publicdata.listNameB;
+
+
 		console.log('load page data',$scope.question);
 		var models = $scope.models = {
 	        lists: {"A": [], "B": []}
@@ -435,9 +465,24 @@ angular.module('qmaker')
 		}
 		} //End of plotView()
 
+		$scope.editList1 = $scope.editList2 = false;
+		$scope.editListName = function(index) {
+			if (index > 0 && index < 3) {
+				if (index === 1) {
+					$scope.editList1 = true;
+				}
+				else if (index === 2) {
+					$scope.editList2 = true;
+				}
+			}
+		}
+
 		$scope.commitQuestion = function() {
 			$scope.question.data.lists.A = $scope.models.lists.A;
 			$scope.question.data.lists.B = $scope.models.lists.B;
+			$scope.question.publicdata.qbody = $scope.qbody;
+			$scope.question.publicdata.listNameA = $scope.list1;
+			$scope.question.publicdata.listNameB = $scope.list2;
 
 			mqgAppData.editQuestion($stateParams.id, $scope.question)
 			  .success(function(response) {

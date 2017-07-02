@@ -4,9 +4,10 @@
         <h2>עיון בתשובה</h2>
         <p>שאלה מסוג: {{solution.question.qtype}}</p>
         <p>תשובה התקבלה בתאריך: {{solutionDate}}</p>
+        <p>שם הפותר: {{solution.solver.name}}</p>
       </div>
       <div class="col-xs-2">
-        <a href="#/solutions/{{question.questionnaire.id}}" class="btn btn-primary btn-sq-action pull-left">
+        <a href="#/students_solutions/{{questionnaire_id}}/{{question._id}}" class="btn btn-primary btn-sq-action pull-left">
         <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
         <h5 style="margin-top: 3px;">חזרה</h5>
       </a>
@@ -132,12 +133,29 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-12">
-      <h3>הערה מהמורה:</h3>
-      <span mathjax-bind="teacherComment"></span>
+ <div class="row">
+  <div class="col-xs-12">
+    <h3>הערה לתלמיד</h3>
+    <p>הזן בשדה הבא הערה לתלמיד</p>
+    <textarea rows="5" id="answer-body" ng-model="teacherComment" placeholder="גוף ההערה"></textarea>
+  </div>
+ </div>
+
+  <div class="row" style="margin-bottom:15px; margin-top:15px;">
+    <div class="col-md-6">
+      <a href="#/students_solutions/{{questionnaire_id}}/{{question._id}}" class="btn btn-primary btn-sq-action pull-left">
+        <span class="glyphicon glyphicon-arrow-left" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">חזרה</h5>
+      </a>
+      </div>
+      <div class="col-md-6">
+      <button class="btn btn-success btn-sq-action pull-right" ng-click="sendComment()">
+        <span class="glyphicon glyphicon-ok" id="action-button-glyph"></span>
+        <h5 style="margin-top: 3px;">שלח הערה</h5>
+      </button>
     </div>
   </div>
+  
 </div>
 
 

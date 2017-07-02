@@ -89,7 +89,7 @@
 			</a>
 
 
-			<a href="#/questionnaires/{{qstnr._id}}/new/open_question" class="btn btn-primary btn-sq-md" id="new-question-btn">
+			<a href="#/questionnaires/{{qstnr._id}}/new/card_matching" class="btn btn-primary btn-sq-md" id="new-question-btn">
 				<span class="glyphicon glyphicon-th" id="new-question-glyph"></span>
 				<h5 class="center-block">
 					התאמת<br>כרטיסיות
@@ -138,6 +138,12 @@
 							<a href="#/questions/{{question._id}}/edit/{{question.qtype}}" class="btn btn-default">
 								עריכה
 							</a>
+							<a href="#/students_solutions/{{qstnr._id}}/{{question._id}}" class="btn btn-default">
+								תשובות
+							</a>
+							<button class="btn btn-md btn-danger delete-question-btn" ng-click="delQuestion(question._id, $index)">
+								<span class="glyphicon glyphicon-trash"></span>
+							</button>
 						</td>
 					</tr>
 				</tbody>

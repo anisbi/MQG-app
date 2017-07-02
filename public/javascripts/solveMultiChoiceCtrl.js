@@ -1,6 +1,6 @@
 angular.module('qmaker').
 
-controller('solveMultiChoiceCtrl', function($scope, $stateParams, $timeout, authentication, mqgAppData) {
+controller('solveMultiChoiceCtrl', function($scope, $stateParams, $location, $timeout, authentication, mqgAppData) {
   $scope.currentUser = authentication.currentUser();
   $scope.failure = true;
   $scope.dataLoaded = false;
@@ -94,7 +94,7 @@ controller('solveMultiChoiceCtrl', function($scope, $stateParams, $timeout, auth
     };
     mqgAppData.postSolution(dataToSend)
      .success(function (data) {
-       console.log("After posting answer:",data);
+        $location.path('/quiz/' + $scope.question.questionnaire);
      })
      .error(function(e) {
       console.log('error',e);
