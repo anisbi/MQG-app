@@ -1,23 +1,23 @@
 <div class="container">
 <form ng-submit="onSubmit()">
   <div class="form-group">
-    <label for="email">Email address</label>
+    <label for="email">כתובת מייל (דואר אלקטרוני)</label>
     <input type="email" class="form-control" id="email" placeholder="Enter email" ng-model="email" required>
   </div>
   <div class="form-group">
-    <label for="name">Name</label>
+    <label for="name">שם מלא</label>
     <input type="text" class="form-control" id="name" placeholder="Name" ng-model="name" required>
   </div>
   <div class="form-group">
-    <label for="password">Password</label>
+    <label for="password">סיסמה</label>
     <input type="password" class="form-control" id="password" placeholder="Password" ng-model="password" required>
   </div>
   <div ng-show="viewReferrerField" class="form-group">
-    <label for="referrer">Referrer</label>
+    <label for="referrer">כתובת מייל המורה המזמין</label>
     <input type="text" class="form-control" id="referrer" placeholder="Referrer" ng-model="referrer">
   </div>
   <div ng-show="viewRegisterCodeField" class="form-group">
-    <label for="registerCode">Referrer</label>
+    <label for="registerCode">סיסמת הרשמה למורה</label>
     <input type="text" class="form-control" id="registerCode" placeholder="Registration code" ng-model="registerCode">
   </div>
   <button type="submit" class="btn btn-default">Register</button>
